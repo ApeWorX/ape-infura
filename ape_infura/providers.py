@@ -24,6 +24,7 @@ class Infura(ProviderAPI):
     def update_settings(self, new_settings: dict):
         pass
 
+    @property
     def chain_id(self) -> int:
         return self._web3.eth.chain_id
 
