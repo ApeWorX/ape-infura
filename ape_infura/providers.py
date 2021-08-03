@@ -24,6 +24,9 @@ class Infura(ProviderAPI):
     def update_settings(self, new_settings: dict):
         pass
 
+    def chain_id(self):
+        pass
+
     def estimate_gas_cost(self, txn: TransactionAPI) -> int:
         return self._web3.eth.estimate_gas(txn.as_dict())  # type: ignore
 
