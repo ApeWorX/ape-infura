@@ -25,7 +25,7 @@ class Infura(ProviderAPI):
         pass
 
     def chain_id(self) -> int:
-        return self,_web3.eth.chain_id
+        return self, self._web3.eth.chain_id  # type: ignore
 
     def estimate_gas_cost(self, txn: TransactionAPI) -> int:
         return self._web3.eth.estimate_gas(txn.as_dict())  # type: ignore
