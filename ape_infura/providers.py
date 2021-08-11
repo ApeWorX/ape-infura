@@ -1,10 +1,9 @@
 import os
 from typing import Iterator
 
+from ape.api import ProviderAPI, ReceiptAPI, TransactionAPI
 from web3 import HTTPProvider, Web3  # type: ignore
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
-
-from ape.api import ProviderAPI, ReceiptAPI, TransactionAPI
 
 
 class Infura(ProviderAPI):
