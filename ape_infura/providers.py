@@ -1,10 +1,9 @@
 import os
 from typing import Iterator
 
+from ape.api import ProviderAPI, ReceiptAPI, TransactionAPI
 from web3 import HTTPProvider, Web3  # type: ignore
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
-
-from ape.api import ProviderAPI, ReceiptAPI, TransactionAPI
 
 
 class Infura(ProviderAPI):
@@ -23,6 +22,10 @@ class Infura(ProviderAPI):
 
     def update_settings(self, new_settings: dict):
         pass
+
+    @property
+    def chain_id(self) -> int:
+        return self._web3.eth.chain_id
 
     def estimate_gas_cost(self, txn: TransactionAPI) -> int:
         return self._web3.eth.estimate_gas(txn.as_dict())  # type: ignore
