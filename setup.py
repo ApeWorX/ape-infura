@@ -60,7 +60,7 @@ setup(
     url="https://github.com/ApeWorX/ape-infura",
     include_package_data=True,
     install_requires=[
-        "eth-ape>=0.1.0a14",
+        "eth-ape>=0.1.0a21",
         "importlib-metadata ; python_version<'3.8'",
     ],  # NOTE: Add 3rd party libraries here
     python_requires=">=3.6,<4",
@@ -79,7 +79,6 @@ setup(
         "Operating System :: MacOS",
         "Operating System :: POSIX",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
