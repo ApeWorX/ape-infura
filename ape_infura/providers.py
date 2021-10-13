@@ -2,6 +2,7 @@ import os
 from typing import Iterator
 
 from ape.api import ProviderAPI, ReceiptAPI, TransactionAPI
+from ape.exceptions import ProviderError
 from web3 import HTTPProvider, Web3  # type: ignore
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 
@@ -35,13 +36,13 @@ class Infura(ProviderAPI):
         return self._web3.eth.generate_gas_price()
 
     def get_nonce(self, address: str) -> int:
-        return self._web3.eth.getTransactionCount(address)  # type: ignore
+        return self._web3.eth.get_transaction_count(address)  # type: ignore
 
     def get_balance(self, address: str) -> int:
-        return self._web3.eth.getBalance(address)  # type: ignore
+        return self._web3.eth.get_balance(address)  # type: ignore
 
     def get_code(self, address: str) -> bytes:
-        return self._web3.eth.getCode(address)  # type: ignore
+        return self._web3.eth.get_code(address)  # type: ignore
 
     def send_call(self, txn: TransactionAPI) -> bytes:
         data = txn.encode()
