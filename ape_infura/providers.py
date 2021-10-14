@@ -9,7 +9,13 @@ from web3.gas_strategies.rpc import rpc_gas_price_strategy
 _ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
 
 
-class MissingProjectKeyError(ProviderError):
+class InfuraProviderError(ProviderError):
+    """
+    An error raised by the Infura provider plugin.
+    """
+
+
+class MissingProjectKeyError(InfuraProviderError):
     def __init__(self):
         env_var_str = ", ".join([f"${n}" for n in _ENVIRONMENT_VARIABLE_NAMES])
         super().__init__(f"Must set one of {env_var_str}")
