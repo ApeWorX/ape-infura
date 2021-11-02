@@ -63,7 +63,7 @@ setup(
         "eth-ape>=0.1.0a21",
         "importlib-metadata ; python_version<'3.8'",
     ],  # NOTE: Add 3rd party libraries here
-    python_requires=">=3.6,<4",
+    python_requires=">=3.7,<4",
     extras_require=extras_require,
     py_modules=["ape_infura"],
     license="Apache-2.0",
