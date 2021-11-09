@@ -44,8 +44,7 @@ class Infura(ProviderAPI):
         return self._web3.eth.getCode(address)  # type: ignore
 
     def send_call(self, txn: TransactionAPI) -> bytes:
-        data = txn.encode()
-        return self._web3.eth.call(data)
+        return self._web3.eth.call(txn.as_dict())
 
     def get_transaction(self, txn_hash: str) -> ReceiptAPI:
         # TODO: Work on API that let's you work with ReceiptAPI and re-send transactions
