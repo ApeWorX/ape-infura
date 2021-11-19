@@ -88,7 +88,7 @@ def _get_vm_error(web3_err: ValueError) -> VirtualMachineError:
         and "message" in message
     ):
         # Is some other VM error, like gas related
-        raise VirtualMachineError(message=message["message"])
+        return VirtualMachineError(message=message["message"])
 
     elif not isinstance(message, str):
         return VirtualMachineError(base_err=web3_err)
