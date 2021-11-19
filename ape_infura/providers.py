@@ -103,6 +103,7 @@ def _get_vm_error(web3_err: ValueError) -> VirtualMachineError:
             return ContractLogicError(revert_message=message)
         else:
             # No revert message
-            return ContractLogicError()
+            # TODO: Won't have to specify `revert_message=None`
+            return ContractLogicError(revert_message=None)
 
     return VirtualMachineError(message=message)
