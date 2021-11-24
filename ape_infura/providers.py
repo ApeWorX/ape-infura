@@ -1,6 +1,6 @@
 import os
 
-from ape.api import ReceiptAPI, TransactionAPI, Web3Provider
+from ape.api import ReceiptAPI, TransactionAPI, Web3Provider, UpstreamProvider
 from ape.exceptions import ContractLogicError, ProviderError, TransactionError, VirtualMachineError
 from ape.utils import gas_estimation_error_message
 from web3 import HTTPProvider, Web3  # type: ignore
@@ -23,8 +23,8 @@ class MissingProjectKeyError(InfuraProviderError):
         super().__init__(f"Must set one of {env_var_str}")
 
 
-class Infura(Web3Provider):
-    def connect(self):
+class Infura(Web3Provider, UpstreamProvider):
+    def __post_init__(self):
         key = None
         for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
             env_var = os.environ.get(env_var_name)
@@ -35,7 +35,14 @@ class Infura(Web3Provider):
         if not key:
             raise MissingProjectKeyError()
 
-        self._web3 = Web3(HTTPProvider(f"https://{self.network.name}.infura.io/v3/{key}"))
+        self.uri = f"https://{self.network.name}.infura.io/v3/{key}"
+
+    @property
+    def connection_str(self) -> str:
+        return self.uri
+
+    def connect(self):
+        self._web3 = Web3(HTTPProvider(self.uri))
         if self._web3.eth.chain_id in (4, 5, 42):
             self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
         self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
@@ -104,7 +111,6 @@ def _get_vm_error(web3_err: ValueError) -> VirtualMachineError:
             return ContractLogicError(revert_message=message)
         else:
             # No revert message
-            # TODO: Won't have to specify `revert_message=""` once 0.1.0a28
-            return ContractLogicError(revert_message="")
+            return ContractLogicError()
 
     return VirtualMachineError(message=message)
