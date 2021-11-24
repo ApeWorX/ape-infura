@@ -1,6 +1,6 @@
 import os
 
-from ape.api import ReceiptAPI, TransactionAPI, Web3Provider, UpstreamProvider
+from ape.api import ReceiptAPI, TransactionAPI, UpstreamProvider, Web3Provider
 from ape.exceptions import ContractLogicError, ProviderError, TransactionError, VirtualMachineError
 from ape.utils import gas_estimation_error_message
 from web3 import HTTPProvider, Web3  # type: ignore
