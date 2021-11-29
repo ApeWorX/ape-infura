@@ -1,6 +1,6 @@
 # Ape Infura Plugin
 
-TODO: Description
+Infura Provider plugins for Ethereum-based networks
 
 ## Dependencies
 
@@ -28,7 +28,11 @@ python3 setup.py install
 
 ## Quick Usage
 
-TODO: Describe library overview in code
+Use in most commands using the `--network` option:
+
+```bash
+ape console --network ethereum:goerli:infura
+```
 
 ## Development
 
