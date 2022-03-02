@@ -2,7 +2,7 @@ import os
 
 from ape.api import ReceiptAPI, TransactionAPI, UpstreamProvider, Web3Provider
 from ape.exceptions import ContractLogicError, ProviderError, TransactionError, VirtualMachineError
-from ape.utils import cached_property, gas_estimation_error_message
+from ape.utils import gas_estimation_error_message
 from web3 import HTTPProvider, Web3  # type: ignore
 from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
@@ -24,8 +24,14 @@ class MissingProjectKeyError(InfuraProviderError):
 
 
 class Infura(Web3Provider, UpstreamProvider):
-    @cached_property
+    network_uris = {}
+
+    @property
     def uri(self) -> str:
+        network_name = self.network.name
+        if network_name in self.network_uris:
+            return self.network_uris[network_name]
+
         key = None
         for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
             env_var = os.environ.get(env_var_name)
@@ -36,7 +42,9 @@ class Infura(Web3Provider, UpstreamProvider):
         if not key:
             raise MissingProjectKeyError()
 
-        return f"https://{self.network.name}.infura.io/v3/{key}"
+        network_uri = f"https://{self.network.name}.infura.io/v3/{key}"
+        self.network_uris[network_name] = network_uri
+        return network_uri
 
     @property
     def connection_str(self) -> str:
