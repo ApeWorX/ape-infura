@@ -1,4 +1,5 @@
 import os
+from typing import Dict
 
 from ape.api import ReceiptAPI, TransactionAPI, UpstreamProvider, Web3Provider
 from ape.exceptions import ContractLogicError, ProviderError, TransactionError, VirtualMachineError
@@ -24,7 +25,14 @@ class MissingProjectKeyError(InfuraProviderError):
 
 
 class Infura(Web3Provider, UpstreamProvider):
-    def __post_init__(self):
+    network_uris: Dict[str, str] = {}
+
+    @property
+    def uri(self) -> str:
+        network_name = self.network.name
+        if network_name in self.network_uris:
+            return self.network_uris[network_name]
+
         key = None
         for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
             env_var = os.environ.get(env_var_name)
@@ -35,7 +43,9 @@ class Infura(Web3Provider, UpstreamProvider):
         if not key:
             raise MissingProjectKeyError()
 
-        self.uri = f"https://{self.network.name}.infura.io/v3/{key}"
+        network_uri = f"https://{self.network.name}.infura.io/v3/{key}"
+        self.network_uris[network_name] = network_uri
+        return network_uri
 
     @property
     def connection_str(self) -> str:
