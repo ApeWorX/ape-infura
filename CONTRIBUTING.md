@@ -1,6 +1,6 @@
 # Development
 
-To get started with working on the codebase, use the following steps prepare your local environment:
+To get started with working on the codebase, use the following steps to prepare in your local environment:
 
 ```bash
 # clone the github repo and navigate into the folder
