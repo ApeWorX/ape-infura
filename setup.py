@@ -4,14 +4,14 @@ from setuptools import find_packages, setup  # type: ignore
 
 extras_require = {
     "test": [  # `test` GitHub Action jobs uses this
-        "pytest>=6.0,<7.0",  # Core testing package
+        "pytest>=6.0",  # Core testing package
         "pytest-xdist",  # multi-process runner
         "pytest-cov",  # Coverage analyzer plugin
         "hypothesis>=6.2.0,<7.0",  # Strategy-based fuzzer
     ],
     "lint": [
-        "black>=22.3.0,<23.0",  # auto-formatter and linter
-        "mypy>=0.950,<1.0",  # Static type analyzer
+        "black>=22.6.0,<23.0",  # auto-formatter and linter
+        "mypy>=0.971,<1.0",  # Static type analyzer
         "flake8>=3.9.2,<4.0",  # Style linter
         "isort>=5.10.1,<6.0",  # Import sorting linter
     ],
@@ -62,7 +62,7 @@ setup(
     install_requires=[
         "eth-ape>=0.4.0,<0.5.0",
         "importlib-metadata ; python_version<'3.8'",
-    ],  # NOTE: Add 3rd party libraries here
+    ],
     python_requires=">=3.7.2,<4",
     extras_require=extras_require,
     py_modules=["ape_infura"],
