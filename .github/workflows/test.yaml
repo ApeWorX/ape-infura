@@ -48,12 +48,11 @@ jobs:
           run: mypy .
 
     functional:
-        runs-on: ${{ matrix.os }}
+        runs-on: ubuntu-latest
 
         strategy:
             matrix:
                 python-version: [3.7, 3.8, 3.9, "3.10"]
-                os: [ubuntu-latest, macos-latest]   # eventually add `windows-latest`
 
         steps:
         - uses: actions/checkout@v2
@@ -69,7 +68,7 @@ jobs:
             pip install .[test]
 
         - name: Run Tests
-          run: pytest -m "not fuzzing" -n 0 -s --cov
+          run: pytest -m "not fuzzing"
           env:
             WEB3_INFURA_PROJECT_ID: ${{ secrets.WEB3_INFURA_PROJECT_ID }}
 
