@@ -11,11 +11,11 @@ cd ape-infura
 python3 -m venv venv
 source venv/bin/activate
 
-# install brownie into the virtual environment
+# install infura into the virtual environment
 python setup.py install
 
 # install the developer dependencies (-e is interactive mode)
-pip install -e .[dev]
+pip install -e .'[dev]'
 ```
 
 ## Pre-Commit Hooks
