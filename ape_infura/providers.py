@@ -1,5 +1,5 @@
 import os
-from typing import Dict
+from typing import Dict, Tuple
 
 from ape.api import UpstreamProvider, Web3Provider
 from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineError
@@ -8,7 +8,18 @@ from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 from web3.middleware import geth_poa_middleware
 
-_ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
+_ETH_ENVIRONMENT_VARIABLE_NAMES = (
+    "WEB3_INFURA_PROJECT_ID",
+    "WEB3_INFURA_API_KEY",
+)
+_ARB_ENVIRONMENT_VARIABLE_NAMES = (
+    "WEB3_ARBITRUM_INFURA_PROJECT_ID",
+    "WEB3_ARBITRUM_INFURA_API_KEY",
+)
+_OP_ENVIRONMENT_VARIABLE_NAMES = (
+    "WEB3_OPTIMISM_INFURA_PROJECT_ID",
+    "WEB3_OPTIMISM_INFURA_API_KEY",
+)
 
 
 class InfuraProviderError(ProviderError):
@@ -18,22 +29,29 @@ class InfuraProviderError(ProviderError):
 
 
 class MissingProjectKeyError(InfuraProviderError):
-    def __init__(self):
-        env_var_str = ", ".join([f"${n}" for n in _ENVIRONMENT_VARIABLE_NAMES])
+    def __init__(self, options: Tuple[str]):
+        env_var_str = ", ".join([f"${n}" for n in options])
         super().__init__(f"Must set one of {env_var_str}")
 
 
 class Infura(Web3Provider, UpstreamProvider):
-    network_uris: Dict[str, str] = {}
+    network_uris: Dict[tuple, str] = {}
+    options_by_ecosystem = {
+        "ethereum": _ETH_ENVIRONMENT_VARIABLE_NAMES,
+        "arbitrum": _ARB_ENVIRONMENT_VARIABLE_NAMES,
+        "optimism": _OP_ENVIRONMENT_VARIABLE_NAMES,
+    }
 
     @property
     def uri(self) -> str:
+        ecosystem_name = self.network.ecosystem.name
         network_name = self.network.name
-        if network_name in self.network_uris:
-            return self.network_uris[network_name]
+        if (ecosystem_name, network_name) in self.network_uris:
+            return self.network_uris[(ecosystem_name, network_name)]
 
         key = None
-        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
+        options = self.options_by_ecosystem[ecosystem_name]
+        for env_var_name in options:
             env_var = os.environ.get(env_var_name)
             if env_var:
                 key = env_var
@@ -42,8 +60,9 @@ class Infura(Web3Provider, UpstreamProvider):
         if not key:
             raise MissingProjectKeyError()
 
-        network_uri = f"https://{self.network.name}.infura.io/v3/{key}"
-        self.network_uris[network_name] = network_uri
+        prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
+        network_uri = f"https://{prefix}{self.network.name}.infura.io/v3/{key}"
+        self.network_uris[(ecosystem_name, network_name)] = network_uri
         return network_uri
 
     @property
