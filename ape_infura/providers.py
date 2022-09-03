@@ -20,6 +20,10 @@ _OP_ENVIRONMENT_VARIABLE_NAMES = (
     "WEB3_OPTIMISM_INFURA_PROJECT_ID",
     "WEB3_OPTIMISM_INFURA_API_KEY",
 )
+_POLYGON_ENVIRONMENT_VARIABLE_NAMES = (
+    "WEB3_OPTIMISM_INFURA_PROJECT_ID",
+    "WEB3_OPTIMISM_INFURA_API_KEY",
+)
 
 
 class InfuraProviderError(ProviderError):
@@ -40,6 +44,7 @@ class Infura(Web3Provider, UpstreamProvider):
         "ethereum": _ETH_ENVIRONMENT_VARIABLE_NAMES,
         "arbitrum": _ARB_ENVIRONMENT_VARIABLE_NAMES,
         "optimism": _OP_ENVIRONMENT_VARIABLE_NAMES,
+        "polygon": _POLYGON_ENVIRONMENT_VARIABLE_NAMES,
     }
 
     @property

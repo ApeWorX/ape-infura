@@ -18,3 +18,8 @@ def test_provider_works():
         assert isinstance(provider, Infura)
         assert provider.get_balance("0x0000000000000000000000000000000000000000") > 0
         assert provider.uri.startswith(f"https://optimism-mainnet.infura.io/v3/")
+
+    with networks.polygon.mumbai.use_provider("infura") as provider:
+        assert isinstance(provider, Infura)
+        assert provider.get_balance("0x0000000000000000000000000000000000000000") > 0
+        assert provider.uri.startswith(f"https://polygon-mumbai.infura.io/v3/")

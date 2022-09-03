@@ -12,11 +12,17 @@ NETWORKS = {
     ],
     "arbitrum": [
         "mainnet",
-        "testnet",
+        "rinkeby",
+        "goerli"
     ],
     "optimism": [
         "mainnet",
-        "testnet",
+        "kovan",
+        "goerli"
+    ],
+    "polygon": [
+        "mainnet",
+        "mumbai",
     ],
 }
 
