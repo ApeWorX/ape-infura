@@ -33,13 +33,13 @@ class InfuraProviderError(ProviderError):
 
 
 class MissingProjectKeyError(InfuraProviderError):
-    def __init__(self, options: Tuple[str]):
+    def __init__(self, options: Tuple[str, str]):
         env_var_str = ", ".join([f"${n}" for n in options])
         super().__init__(f"Must set one of {env_var_str}")
 
 
 class Infura(Web3Provider, UpstreamProvider):
-    network_uris: Dict[tuple, str] = {}
+    network_uris: Dict[Tuple[str, str], str] = {}
     options_by_ecosystem = {
         "ethereum": _ETH_ENVIRONMENT_VARIABLE_NAMES,
         "arbitrum": _ARB_ENVIRONMENT_VARIABLE_NAMES,
@@ -63,7 +63,7 @@ class Infura(Web3Provider, UpstreamProvider):
                 break
 
         if not key:
-            raise MissingProjectKeyError()
+            raise MissingProjectKeyError(options)
 
         prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
         network_uri = f"https://{prefix}{self.network.name}.infura.io/v3/{key}"
