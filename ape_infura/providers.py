@@ -8,22 +8,24 @@ from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 from web3.middleware import geth_poa_middleware
 
-_ETH_ENVIRONMENT_VARIABLE_NAMES = (
-    "WEB3_INFURA_PROJECT_ID",
-    "WEB3_INFURA_API_KEY",
-)
-_ARB_ENVIRONMENT_VARIABLE_NAMES = (
-    "WEB3_ARBITRUM_INFURA_PROJECT_ID",
-    "WEB3_ARBITRUM_INFURA_API_KEY",
-)
-_OP_ENVIRONMENT_VARIABLE_NAMES = (
-    "WEB3_OPTIMISM_INFURA_PROJECT_ID",
-    "WEB3_OPTIMISM_INFURA_API_KEY",
-)
-_POLYGON_ENVIRONMENT_VARIABLE_NAMES = (
-    "WEB3_POLYGON_INFURA_PROJECT_ID",
-    "WEB3_POLYGON_INFURA_API_KEY",
-)
+_ENVIRONMENT_VARIABLE_OPTIONS = {
+    "ethereum": (
+        "WEB3_INFURA_PROJECT_ID",
+        "WEB3_INFURA_API_KEY",
+    ),
+    "arbitrum": (
+        "WEB3_ARBITRUM_INFURA_PROJECT_ID",
+        "WEB3_ARBITRUM_INFURA_API_KEY",
+    ),
+    "optimism": (
+        "WEB3_OPTIMISM_INFURA_PROJECT_ID",
+        "WEB3_OPTIMISM_INFURA_API_KEY",
+    ),
+    "polygon": (
+        "WEB3_POLYGON_INFURA_PROJECT_ID",
+        "WEB3_POLYGON_INFURA_API_KEY",
+    ),
+}
 
 
 class InfuraProviderError(ProviderError):
@@ -40,12 +42,6 @@ class MissingProjectKeyError(InfuraProviderError):
 
 class Infura(Web3Provider, UpstreamProvider):
     network_uris: Dict[Tuple[str, str], str] = {}
-    options_by_ecosystem = {
-        "ethereum": _ETH_ENVIRONMENT_VARIABLE_NAMES,
-        "arbitrum": _ARB_ENVIRONMENT_VARIABLE_NAMES,
-        "optimism": _OP_ENVIRONMENT_VARIABLE_NAMES,
-        "polygon": _POLYGON_ENVIRONMENT_VARIABLE_NAMES,
-    }
 
     @property
     def uri(self) -> str:
@@ -55,7 +51,7 @@ class Infura(Web3Provider, UpstreamProvider):
             return self.network_uris[(ecosystem_name, network_name)]
 
         key = None
-        options = self.options_by_ecosystem[ecosystem_name]
+        options = _ENVIRONMENT_VARIABLE_OPTIONS[ecosystem_name]
         for env_var_name in options:
             env_var = os.environ.get(env_var_name)
             if env_var:
@@ -90,9 +86,9 @@ class Infura(Web3Provider, UpstreamProvider):
         args = exception.args
         message = args[0]
         if (
-            not isinstance(exception, Web3ContractLogicError)
-            and isinstance(message, dict)
-            and "message" in message
+                not isinstance(exception, Web3ContractLogicError)
+                and isinstance(message, dict)
+                and "message" in message
         ):
             # Is some other VM error, like gas related
             return VirtualMachineError(message=message["message"])
