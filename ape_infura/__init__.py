@@ -12,13 +12,12 @@ NETWORKS = {
     ],
     "arbitrum": [
         "mainnet",
-        "rinkeby",
-        "goerli"
+        "tesnet",
     ],
     "optimism": [
         "mainnet",
         "kovan",
-        "goerli"
+        "goerli",
     ],
     "polygon": [
         "mainnet",

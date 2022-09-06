@@ -62,6 +62,9 @@ class Infura(Web3Provider, UpstreamProvider):
             raise MissingProjectKeyError(options)
 
         prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
+        network = self.network.name
+        if ecosystem_name == 'arbitrum' and self.network.name == 'testnet':
+            network = 'rinkeby'  # currently only "testnet is supported on arbitrum"
         network_uri = f"https://{prefix}{self.network.name}.infura.io/v3/{key}"
         self.network_uris[(ecosystem_name, network_name)] = network_uri
         return network_uri
@@ -86,9 +89,9 @@ class Infura(Web3Provider, UpstreamProvider):
         args = exception.args
         message = args[0]
         if (
-                not isinstance(exception, Web3ContractLogicError)
-                and isinstance(message, dict)
-                and "message" in message
+            not isinstance(exception, Web3ContractLogicError)
+            and isinstance(message, dict)
+            and "message" in message
         ):
             # Is some other VM error, like gas related
             return VirtualMachineError(message=message["message"])
