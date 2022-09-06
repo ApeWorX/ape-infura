@@ -63,8 +63,8 @@ class Infura(Web3Provider, UpstreamProvider):
 
         prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
 
-        # currently only "testnet" is supported on arbitrum, which is equal to rinkeby in ape-arbitrum
-        # so we need uri to contain "rinkeby" and self.network_uris dict to have key for ("arbitrum", "testnet")
+        # currently only "testnet" is supported on arbitrum (rinkeby in ape-arbitrum)
+        # need uri to contain "rinkeby" and self.network_uris to have key ("arbitrum", "testnet")
         network_name_in_uri = network_name
         if ecosystem_name == "arbitrum" and network_name == "testnet":
             network_name_in_uri = "rinkeby"
