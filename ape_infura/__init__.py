@@ -12,7 +12,7 @@ NETWORKS = {
     ],
     "arbitrum": [
         "mainnet",
-        "tesnet",
+        "testnet",
     ],
     "optimism": [
         "mainnet",
