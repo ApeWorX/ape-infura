@@ -8,24 +8,7 @@ from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 from web3.middleware import geth_poa_middleware
 
-_ENVIRONMENT_VARIABLE_OPTIONS = {
-    "ethereum": (
-        "WEB3_INFURA_PROJECT_ID",
-        "WEB3_INFURA_API_KEY",
-    ),
-    "arbitrum": (
-        "WEB3_ARBITRUM_INFURA_PROJECT_ID",
-        "WEB3_ARBITRUM_INFURA_API_KEY",
-    ),
-    "optimism": (
-        "WEB3_OPTIMISM_INFURA_PROJECT_ID",
-        "WEB3_OPTIMISM_INFURA_API_KEY",
-    ),
-    "polygon": (
-        "WEB3_POLYGON_INFURA_PROJECT_ID",
-        "WEB3_POLYGON_INFURA_API_KEY",
-    ),
-}
+_ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
 
 
 class InfuraProviderError(ProviderError):
@@ -35,8 +18,8 @@ class InfuraProviderError(ProviderError):
 
 
 class MissingProjectKeyError(InfuraProviderError):
-    def __init__(self, options: Tuple[str, str]):
-        env_var_str = ", ".join([f"${n}" for n in options])
+    def __init__(self):
+        env_var_str = ", ".join([f"${n}" for n in _ENVIRONMENT_VARIABLE_NAMES])
         super().__init__(f"Must set one of {env_var_str}")
 
 
@@ -51,15 +34,14 @@ class Infura(Web3Provider, UpstreamProvider):
             return self.network_uris[(ecosystem_name, network_name)]
 
         key = None
-        options = _ENVIRONMENT_VARIABLE_OPTIONS[ecosystem_name]
-        for env_var_name in options:
+        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
             env_var = os.environ.get(env_var_name)
             if env_var:
                 key = env_var
                 break
 
         if not key:
-            raise MissingProjectKeyError(options)
+            raise MissingProjectKeyError()
 
         prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
 
