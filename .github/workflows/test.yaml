@@ -22,11 +22,11 @@ jobs:
         - name: Run Black
           run: black --check .
 
-        - name: Run flake8
-          run: flake8 .
-
         - name: Run isort
           run: isort --check-only .
+
+        - name: Run flake8
+          run: flake8 .
 
     type-check:
         runs-on: ubuntu-latest
@@ -69,7 +69,9 @@ jobs:
             pip install .[test]
 
         - name: Run Tests
-          run: pytest -m "not fuzzing" -n 0 -s --cov
+          run: pytest -m "not fuzzing" -s --cov=src -n auto
+          env:
+            WEB3_INFURA_PROJECT_ID: ${{ secrets.WEB3_INFURA_PROJECT_ID }}
 
 # NOTE: uncomment this block after you've marked tests with @pytest.mark.fuzzing
 #    fuzzing:
@@ -87,7 +89,9 @@ jobs:
 #              python-version: 3.8
 #
 #        - name: Install Dependencies
-#          run: pip install .[test]
+#          run: |
+#            python -m pip install --upgrade pip
+#            pip install .[test]
 #
 #        - name: Run Tests
 #          run: pytest -m "fuzzing" --no-cov -s
