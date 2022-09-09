@@ -53,8 +53,3 @@ from ape import networks
 with networks.parse_network_choice("ethereum:mainnet:infura") as provider:
     ...
 ```
-
-## Development
-
-Please see the [contributing guide](CONTRIBUTING.md) to learn more how to contribute to this project.
-Comments, questions, criticisms and pull requests are welcomed.
