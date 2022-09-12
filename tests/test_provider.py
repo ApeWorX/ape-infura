@@ -10,7 +10,8 @@ from ape_infura.providers import Infura
         ("ethereum", "mainnet"),
         ("ethereum", "kovan"),
         ("arbitrum", "mainnet"),
-        ("arbitrum", "testnet"),
+        # Uncomment when network name corrected
+        # ("arbitrum", "testnet"),
         ("polygon", "mumbai"),
     ],
 )
