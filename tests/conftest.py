@@ -3,11 +3,6 @@ import pytest
 
 
 @pytest.fixture
-def networks():
-    return ape.networks
-
-
-@pytest.fixture
 def accounts():
     return ape.accounts
 
@@ -15,3 +10,8 @@ def accounts():
 @pytest.fixture
 def Contract():
     return ape.Contract
+
+
+@pytest.fixture
+def networks():
+    return ape.networks
