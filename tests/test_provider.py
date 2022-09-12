@@ -20,5 +20,5 @@ def test_ethereum_mainnet(ecosystem, network):
     with network_cls.use_provider("infura") as provider:
         assert isinstance(provider, Infura)
         assert provider.get_balance("0x0000000000000000000000000000000000000000") > 0
-        ecosystem_uri = "" if ecosystem == "ethereum-" else ecosystem
-        assert provider.uri.endswith(f"https://{ecosystem_uri}{network}.infura.io/v3/")
+        ecosystem_uri = "" if ecosystem == "ethereum" else f"{ecosystem}-"
+        assert f"https://{ecosystem_uri}{network}.infura.io/v3/" in provider.uri
