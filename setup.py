@@ -8,9 +8,9 @@ extras_require = {
         "pytest-xdist",  # multi-process runner
         "pytest-cov",  # Coverage analyzer plugin
         "hypothesis>=6.2.0,<7.0",  # Strategy-based fuzzer
-        "ape-arbitrum>=0.4.0a,<0.5",
-        "ape-optimism>=0.4.0a,<0.5",
-        "ape-polygon>=0.4.0a,<0.5",
+        "ape-arbitrum",
+        "ape-optimism",
+        "ape-polygon",
     ],
     "lint": [
         "black>=22.6.0",  # auto-formatter and linter
@@ -63,10 +63,9 @@ setup(
     url="https://github.com/ApeWorX/ape-infura",
     include_package_data=True,
     install_requires=[
-        "eth-ape>=0.4.0,<0.5.0",
-        "importlib-metadata ; python_version<'3.8'",
+        "eth-ape>=0.5.0,<0.6",
     ],
-    python_requires=">=3.7.2,<4",
+    python_requires=">=3.8,<3.11",
     extras_require=extras_require,
     py_modules=["ape_infura"],
     license="Apache-2.0",
@@ -82,7 +81,6 @@ setup(
         "Operating System :: MacOS",
         "Operating System :: POSIX",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
