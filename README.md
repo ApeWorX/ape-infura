@@ -1,6 +1,12 @@
 # Quick Start
 
-Infura Provider plugins for Ethereum-based networks
+Infura provider plugins for Ape.
+The `ape-infura` plugin supports the following ecosystems:
+
+* Ethereum
+* Polygon
+* Arbitrum
+* Optimism
 
 ## Dependencies
 
