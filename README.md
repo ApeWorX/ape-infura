@@ -1,7 +1,7 @@
 # Quick Start
 
-Infura provider plugins for Ape.
-The `ape-infura` plugin supports the following ecosystems:
+Use the [Infura](https://infura.io/) provider plugin to interact with blockchains via APIs.
+This plugin supports the following ecosystems:
 
 * Ethereum
 * Polygon
