@@ -13,7 +13,7 @@ NETWORKS = {
     ],
     "optimism": [
         "mainnet",
-        "testnet",
+        "goerli",
     ],
     "polygon": [
         "mainnet",

@@ -12,6 +12,7 @@ from ape_infura.providers import Infura
         ("ethereum", "goerli"),
         ("arbitrum", "mainnet"),
         ("optimism", "mainnet"),
+        ("optimism", "goerli"),
         ("polygon", "mumbai"),
     ],
 )
