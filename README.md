@@ -1,6 +1,12 @@
 # Quick Start
 
-Infura Provider plugins for Ethereum-based networks
+Use the [Infura](https://infura.io/) provider plugin to interact with blockchains via APIs.
+This plugin supports the following ecosystems:
+
+* Ethereum
+* Polygon
+* Arbitrum
+* Optimism
 
 ## Dependencies
 

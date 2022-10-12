@@ -5,18 +5,14 @@ from .providers import Infura
 NETWORKS = {
     "ethereum": [
         "mainnet",
-        "ropsten",
-        "rinkeby",
-        "kovan",
         "goerli",
     ],
     "arbitrum": [
         "mainnet",
-        "testnet",
+        "goerli",
     ],
     "optimism": [
         "mainnet",
-        "kovan",
         "goerli",
     ],
     "polygon": [

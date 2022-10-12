@@ -44,13 +44,7 @@ class Infura(Web3Provider, UpstreamProvider):
             raise MissingProjectKeyError()
 
         prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
-
-        # currently only "testnet" is supported on arbitrum (rinkeby in ape-arbitrum)
-        # need uri to contain "rinkeby" and self.network_uris to have key ("arbitrum", "testnet")
-        network_name_in_uri = network_name
-        if ecosystem_name == "arbitrum" and network_name == "testnet":
-            network_name_in_uri = "rinkeby"
-        network_uri = f"https://{prefix}{network_name_in_uri}.infura.io/v3/{key}"
+        network_uri = f"https://{prefix}{network_name}.infura.io/v3/{key}"
         self.network_uris[(ecosystem_name, network_name)] = network_uri
         return network_uri
 
