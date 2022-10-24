@@ -2,7 +2,7 @@ import pytest
 from ape import networks
 from ape.utils import ZERO_ADDRESS
 
-from ape_infura.providers import Infura
+from ape_infura.provider import Infura
 
 
 @pytest.mark.parametrize(
@@ -23,5 +23,6 @@ def test_infura(ecosystem, network):
     with network_cls.use_provider("infura") as provider:
         assert isinstance(provider, Infura)
         assert provider.get_balance(ZERO_ADDRESS) > 0
+        assert provider.get_block("latest")
         ecosystem_uri = "" if ecosystem == "ethereum" else f"{ecosystem}-"
         assert f"https://{ecosystem_uri}{network}.infura.io/v3/" in provider.uri
