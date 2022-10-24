@@ -56,7 +56,7 @@ class Infura(Web3Provider, UpstreamProvider):
         self._web3 = Web3(HTTPProvider(self.uri))
 
         # optimism:mainnet, optimism:goerli, or polygon:mumbai
-        if self._web3.eth.chain_id in (10, 420, 80001):
+        if self._web3.eth.chain_id in (10, 420, 137, 80001):
             self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)

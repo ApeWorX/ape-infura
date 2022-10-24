@@ -14,6 +14,7 @@ from ape_infura.provider import Infura
         ("arbitrum", "goerli"),
         ("optimism", "mainnet"),
         ("optimism", "goerli"),
+        ("polygon", "mainnet"),
         ("polygon", "mumbai"),
     ],
 )
