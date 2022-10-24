@@ -1,6 +1,6 @@
 from ape import plugins
 
-from .providers import Infura
+from .provider import Infura
 
 NETWORKS = {
     "ethereum": [
