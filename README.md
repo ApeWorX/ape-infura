@@ -3,14 +3,14 @@
 Use the [Infura](https://infura.io/) provider plugin to interact with blockchains via APIs.
 This plugin supports the following ecosystems:
 
-* Ethereum
-* Polygon
-* Arbitrum
-* Optimism
+- Ethereum
+- Polygon
+- Arbitrum
+- Optimism
 
 ## Dependencies
 
-* [python3](https://www.python.org/downloads) version 3.8 or greater, python3-dev
+- [python3](https://www.python.org/downloads) version 3.8 or greater, python3-dev
 
 ## Installation
 
@@ -36,8 +36,8 @@ python3 setup.py install
 
 First, make sure you have one of the following environment variables set (it doesn't matter which one):
 
-* WEB3_INFURA_PROJECT_ID
-* WEB3_INFURA_API_KEY
+- WEB3_INFURA_PROJECT_ID
+- WEB3_INFURA_API_KEY
 
 Either in your current terminal session or in your root RC file (e.g. `.bashrc`), add the following:
 

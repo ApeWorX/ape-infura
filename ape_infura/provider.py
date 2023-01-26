@@ -66,11 +66,12 @@ class Infura(Web3Provider, UpstreamProvider):
         self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
 
     def disconnect(self):
-        self._web3 = None  # type: ignore
+        self._web3 = None
 
-    def get_virtual_machine_error(self, exception: Exception) -> VirtualMachineError:
+    def get_virtual_machine_error(self, exception: Exception, **kwargs) -> VirtualMachineError:
+        txn = kwargs.get("txn")
         if not hasattr(exception, "args") or not len(exception.args):
-            return VirtualMachineError(base_err=exception)
+            return VirtualMachineError(base_err=exception, txn=txn)
 
         args = exception.args
         message = args[0]
@@ -80,10 +81,10 @@ class Infura(Web3Provider, UpstreamProvider):
             and "message" in message
         ):
             # Is some other VM error, like gas related
-            return VirtualMachineError(message=message["message"])
+            return VirtualMachineError(message["message"], txn=txn)
 
         elif not isinstance(message, str):
-            return VirtualMachineError(base_err=exception)
+            return VirtualMachineError(base_err=exception, txn=txn)
 
         # If get here, we have detected a contract logic related revert.
         message_prefix = "execution reverted"
@@ -93,9 +94,9 @@ class Infura(Web3Provider, UpstreamProvider):
             if ":" in message:
                 # Was given a revert message
                 message = message.split(":")[-1].strip()
-                return ContractLogicError(revert_message=message)
+                return ContractLogicError(revert_message=message, txn=txn)
             else:
                 # No revert message
-                return ContractLogicError()
+                return ContractLogicError(txn=txn)
 
-        return VirtualMachineError(message=message)
+        return VirtualMachineError(message, txn=txn)
