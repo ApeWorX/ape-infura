@@ -20,6 +20,10 @@ NETWORKS = {
         "mainnet",
         "mumbai",
     ],
+    "linea": [
+        "mainnet",
+        "goerli",
+    ],
 }
 
 
