@@ -17,6 +17,8 @@ from ape_infura.provider import Infura
         ("optimism", "goerli"),
         ("polygon", "mainnet"),
         ("polygon", "mumbai"),
+        ["linea", "mainnet"],
+        ["linea", "goerli"],
     ],
 )
 def test_infura(ecosystem, network):
