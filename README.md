@@ -7,6 +7,7 @@ This plugin supports the following ecosystems:
 - Polygon
 - Arbitrum
 - Optimism
+- Linea
 
 ## Dependencies
 
