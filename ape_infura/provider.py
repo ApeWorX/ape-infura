@@ -56,7 +56,8 @@ class Infura(Web3Provider, UpstreamProvider):
     @property
     def ws_uri(self) -> str:
         # NOTE: Overriding `Web3Provider.ws_uri` implementation
-        return "ws" + self.uri[4:]  # Remove `http` in default URI w/ `ws`
+        # Remove `http` in default URI w/ `ws`, also infura adds `/ws` to URI
+        return "ws" + self.uri[4:].replace("v3", "ws/v3")
 
     @property
     def connection_str(self) -> str:
