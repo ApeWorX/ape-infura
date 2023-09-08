@@ -49,6 +49,16 @@ class Infura(Web3Provider, UpstreamProvider):
         return network_uri
 
     @property
+    def http_uri(self) -> str:
+        # NOTE: Overriding `Web3Provider.http_uri` implementation
+        return self.uri
+
+    @property
+    def ws_uri(self) -> str:
+        # NOTE: Overriding `Web3Provider.ws_uri` implementation
+        return "ws" + self.uri[4:]  # Remove `http` in default URI w/ `ws`
+
+    @property
     def connection_str(self) -> str:
         return self.uri
 

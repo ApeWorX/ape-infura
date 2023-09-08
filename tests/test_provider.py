@@ -26,6 +26,8 @@ def test_infura(ecosystem, network):
     network_cls = ecosystem_cls.get_network(network)
     with network_cls.use_provider("infura") as provider:
         assert isinstance(provider, Infura)
+        assert provider.http_uri.startswith("https")
+        assert provider.ws_uri.startswith("wss")
         assert provider.get_balance(ZERO_ADDRESS) > 0
         assert provider.get_block(0)
         ecosystem_uri = "" if ecosystem == "ethereum" else f"{ecosystem}-"
