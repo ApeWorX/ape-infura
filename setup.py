@@ -12,14 +12,15 @@ extras_require = {
         "ape-optimism",
         "ape-polygon",
         "ape-linea",
+        "websocket-client",  # Used for web socket integration testing
     ],
     "lint": [
-        "black>=23.3.0,<24",  # auto-formatter and linter
-        "mypy>=0.991,<1",  # Static type analyzer
-        "flake8>=6.0.0,<7",  # Style linter
+        "black>=23.9.1,<24",  # auto-formatter and linter
+        "mypy>=1.5.1,<2",  # Static type analyzer
+        "flake8>=6.1.0,<7",  # Style linter
         "isort>=5.10.1,<6",  # Import sorting linter
         "types-setuptools",  # Needed due to mypy typeshed
-        "mdformat>=0.7.16",  # Auto-formatter for markdown
+        "mdformat>=0.7.17",  # Auto-formatter for markdown
         "mdformat-gfm>=0.3.5",  # Needed for formatting GitHub-flavored markdown
         "mdformat-frontmatter>=0.4.1",  # Needed for frontmatters-style headers in issue templates
     ],
@@ -68,7 +69,7 @@ setup(
     url="https://github.com/ApeWorX/ape-infura",
     include_package_data=True,
     install_requires=[
-        "eth-ape>=0.6.5,<0.7",
+        "eth-ape>=0.6.19,<0.7",
     ],
     python_requires=">=3.8,<4",
     extras_require=extras_require,

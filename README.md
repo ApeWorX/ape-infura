@@ -58,5 +58,6 @@ To connect to Infura from a Python script, use the `networks` top-level manager:
 from ape import networks
 
 with networks.parse_network_choice("ethereum:mainnet:infura") as provider:
-    ...
+    # Also, access the websocket URI:
+    print(provider.ws_uri)
 ```
