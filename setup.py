@@ -12,6 +12,7 @@ extras_require = {
         "ape-optimism",
         "ape-polygon",
         "ape-linea",
+        "websocket-client",  # Used for web socket integration testing
     ],
     "lint": [
         "black>=23.3.0,<24",  # auto-formatter and linter
