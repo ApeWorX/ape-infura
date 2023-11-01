@@ -2,7 +2,7 @@ import pytest
 import websocket  # type: ignore
 from ape.utils import ZERO_ADDRESS
 
-from ape_infura.provider import Infura
+from ape_infura.provider import _WEBSOCKET_CAPABLE_ECOSYSTEMS, Infura
 
 
 def test_infura_http(provider):
@@ -17,6 +17,11 @@ def test_infura_http(provider):
 
 
 def test_infura_ws(provider):
+    ecosystem = provider.network.ecosystem.name
+    if ecosystem not in _WEBSOCKET_CAPABLE_ECOSYSTEMS:
+        assert provider.ws_uri == None
+        return
+
     assert provider.ws_uri.startswith("wss")
 
     try:
