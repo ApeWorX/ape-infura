@@ -15,6 +15,7 @@ NETWORKS = {
     "optimism": [
         "mainnet",
         "goerli",
+        "sepolia",
     ],
     "polygon": [
         "mainnet",
