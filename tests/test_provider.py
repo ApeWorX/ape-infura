@@ -19,7 +19,7 @@ def test_infura_http(provider):
 def test_infura_ws(provider):
     ecosystem = provider.network.ecosystem.name
     if ecosystem not in _WEBSOCKET_CAPABLE_ECOSYSTEMS:
-        assert provider.ws_uri == None
+        assert provider.ws_uri is None
         return
 
     assert provider.ws_uri.startswith("wss")
