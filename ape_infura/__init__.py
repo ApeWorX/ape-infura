@@ -11,6 +11,7 @@ NETWORKS = {
     "arbitrum": [
         "mainnet",
         "goerli",
+        "sepolia",
     ],
     "optimism": [
         "mainnet",
