@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 from ape.api import UpstreamProvider, Web3Provider
 from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineError
@@ -9,6 +9,12 @@ from web3.gas_strategies.rpc import rpc_gas_price_strategy
 from web3.middleware import geth_poa_middleware
 
 _ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
+# NOTE: https://docs.infura.io/learn/websockets#supported-networks
+_WEBSOCKET_CAPABLE_ECOSYSTEMS = {
+    "ethereum",
+    "polygon",
+    "linea",
+}
 
 
 class InfuraProviderError(ProviderError):
@@ -54,8 +60,11 @@ class Infura(Web3Provider, UpstreamProvider):
         return self.uri
 
     @property
-    def ws_uri(self) -> str:
+    def ws_uri(self) -> Optional[str]:
         # NOTE: Overriding `Web3Provider.ws_uri` implementation
+        if self.network.ecosystem.name not in _WEBSOCKET_CAPABLE_ECOSYSTEMS:
+            return None
+
         # Remove `http` in default URI w/ `ws`, also infura adds `/ws` to URI
         return "ws" + self.uri[4:].replace("v3", "ws/v3")
 
