@@ -1,8 +1,9 @@
 import os
 from typing import Dict, Optional, Tuple
 
-from ape.api import UpstreamProvider, Web3Provider
+from ape.api import UpstreamProvider
 from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineError
+from ape_ethereum.provider import Web3Provider
 from web3 import HTTPProvider, Web3
 from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
