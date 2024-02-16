@@ -13,6 +13,8 @@ _ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
 # NOTE: https://docs.infura.io/learn/websockets#supported-networks
 _WEBSOCKET_CAPABLE_ECOSYSTEMS = {
     "ethereum",
+    "arbitrum",
+    "optimism",
     "polygon",
     "linea",
 }
