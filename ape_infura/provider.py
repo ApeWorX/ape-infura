@@ -81,7 +81,7 @@ class Infura(Web3Provider, UpstreamProvider):
         # Any chain that *began* as PoA needs the middleware for pre-merge blocks
         ethereum_goerli = 5
         optimism = (10, 420)
-        polygon = (137, 80001)
+        polygon = (137, 80001, 80002)
         linea = (59144, 59140)
 
         if self._web3.eth.chain_id in (ethereum_goerli, *optimism, *polygon, *linea):
