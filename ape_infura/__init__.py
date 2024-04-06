@@ -5,7 +5,6 @@ from .provider import Infura
 NETWORKS = {
     "ethereum": [
         "mainnet",
-        "goerli",
         "sepolia",
     ],
     "arbitrum": [
@@ -24,7 +23,6 @@ NETWORKS = {
     # TODO: Comment out after ape-linea supports 0.7
     # "linea": [
     #     "mainnet",
-    #     "goerli",
     # ],
 }
 
