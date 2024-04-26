@@ -17,6 +17,7 @@ _WEBSOCKET_CAPABLE_ECOSYSTEMS = {
     "optimism",
     "polygon",
     "linea",
+    "blast",
 }
 
 
@@ -83,8 +84,9 @@ class Infura(Web3Provider, UpstreamProvider):
         optimism = (10, 420)
         polygon = (137, 80001, 80002)
         linea = (59144, 59140)
+        blast = (11155111, 168587773)
 
-        if self._web3.eth.chain_id in (ethereum_goerli, *optimism, *polygon, *linea):
+        if self._web3.eth.chain_id in (ethereum_goerli, *optimism, *polygon, *linea, *blast):
             self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
