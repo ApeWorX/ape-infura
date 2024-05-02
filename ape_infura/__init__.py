@@ -17,7 +17,6 @@ NETWORKS = {
     ],
     "polygon": [
         "mainnet",
-        "mumbai",
         "amoy",
     ],
     "blast": [
