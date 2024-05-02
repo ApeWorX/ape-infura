@@ -49,7 +49,7 @@ export WEB3_INFURA_PROJECT_ID=MY_API_TOKEN
 To use the Infura provider plugin in most commands, set it via the `--network` option:
 
 ```bash
-ape console --network ethereum:goerli:infura
+ape console --network ethereum:sepolia:infura
 ```
 
 To connect to Infura from a Python script, use the `networks` top-level manager:
