@@ -8,9 +8,10 @@ extras_require = {
         "pytest-xdist",  # Multi-process runner
         "pytest-cov",  # Coverage analyzer plugin
         "hypothesis>=6.2.0,<7.0",  # Strategy-based fuzzer
-        "ape-arbitrum",
-        "ape-optimism",
-        "ape-polygon",
+        "ape-arbitrum",  # For integration testing
+        "ape-blast",  # For integration testing
+        "ape-optimism",  # For integration testing
+        "ape-polygon",  # For integration testing
         # "ape-linea",  # TODO: Comment out after supports 0.7
         "websocket-client",  # Used for web socket integration testing
     ],

@@ -7,7 +7,8 @@ This plugin supports the following ecosystems:
 - Polygon
 - Arbitrum
 - Optimism
-- Linea
+- Blast
+- ~~Linea~~ (awaiting ape-linea update)
 
 ## Dependencies
 

@@ -17,8 +17,11 @@ NETWORKS = {
     ],
     "polygon": [
         "mainnet",
-        "mumbai",
         "amoy",
+    ],
+    "blast": [
+        "mainnet",
+        "sepolia",
     ],
     # TODO: Comment out after ape-linea supports 0.7
     # "linea": [

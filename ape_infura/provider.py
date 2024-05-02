@@ -79,12 +79,12 @@ class Infura(Web3Provider, UpstreamProvider):
         self._web3 = Web3(HTTPProvider(self.uri))
 
         # Any chain that *began* as PoA needs the middleware for pre-merge blocks
-        ethereum_sepolia = 11155111
         optimism = (10, 420)
         polygon = (137, 80001, 80002)
         linea = (59144, 59140)
+        blast = (11155111, 168587773)
 
-        if self._web3.eth.chain_id in (ethereum_sepolia, *optimism, *polygon, *linea):
+        if self._web3.eth.chain_id in (*optimism, *polygon, *linea, *blast):
             self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
