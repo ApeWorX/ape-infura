@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Optional, Tuple
+from typing import Optional
 
 from ape.api import UpstreamProvider
 from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineError
@@ -33,7 +33,7 @@ class MissingProjectKeyError(InfuraProviderError):
 
 
 class Infura(Web3Provider, UpstreamProvider):
-    network_uris: Dict[Tuple[str, str], str] = {}
+    network_uris: dict[tuple[str, str], str] = {}
 
     @property
     def uri(self) -> str:
