@@ -76,7 +76,7 @@ setup(
     url="https://github.com/ApeWorX/ape-infura",
     include_package_data=True,
     install_requires=[
-        "eth-ape>=0.7.0,<0.8",
+        "eth-ape>=0.8.1,<0.9",
     ],
     python_requires=">=3.9,<4",
     extras_require=extras_require,
