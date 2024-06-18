@@ -10,6 +10,7 @@ extras_require = {
         "pytest-cov",  # Coverage analyzer plugin
         "hypothesis>=6.2.0,<7.0",  # Strategy-based fuzzer
         "ape-arbitrum",  # For integration testing
+        "ape-avalanche",  # For integration testing
         "ape-blast",  # For integration testing
         "ape-optimism",  # For integration testing
         "ape-polygon",  # For integration testing
