@@ -45,6 +45,9 @@ Either in your current terminal session or in your root RC file (e.g. `.bashrc`)
 
 ```bash
 export WEB3_INFURA_PROJECT_ID=MY_API_TOKEN
+
+# Multple tokens
+export WEB3_INFURA_PROJECT_ID=MY_API_TOKEN1, MY_API_TOKEN2
 ```
 
 To use the Infura provider plugin in most commands, set it via the `--network` option:
