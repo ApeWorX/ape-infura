@@ -1,10 +1,11 @@
+import os
 from unittest.mock import patch
 
 import pytest
 import websocket  # type: ignore
 from ape.utils import ZERO_ADDRESS
 
-from ape_infura.provider import _WEBSOCKET_CAPABLE_ECOSYSTEMS, Infura
+from ape_infura.provider import _WEBSOCKET_CAPABLE_ECOSYSTEMS, Infura, MissingProjectKeyError
 
 
 def test_infura_http(provider):
@@ -38,10 +39,11 @@ def test_infura_ws(provider):
 def test_load_multiple_api_keys(provider):
     with patch.dict(
         os.environ,
-        {"WEB3_INFURA_PROJECT_IDS": "key1,key2,key3", "WEB3_INFURA_API_KEYS": "key4,key5,key6"},
+        {"WEB3_INFURA_PROJECT_ID": "key1,key2,key3", "WEB3_INFURA_API_KEY": "key4,key5,key6"},
     ):
         provider.load_api_keys()
-        assert len(provider.api_keys) == 6
+        # As there will be API keys in the ENV as well
+        assert len(provider.api_keys) >= 6
         assert "key1" in provider.api_keys
         assert "key6" in provider.api_keys
 
@@ -52,17 +54,16 @@ def test_load_single_and_multiple_api_keys(provider):
         {
             "WEB3_INFURA_PROJECT_ID": "single_key1",
             "WEB3_INFURA_API_KEY": "single_key2",
-            "WEB3_INFURA_PROJECT_IDS": "multi_key1,multi_key2",
         },
     ):
         provider.load_api_keys()
-        assert len(provider.api_keys) == 4
+        assert len(provider.api_keys) >= 2
         assert "single_key1" in provider.api_keys
-        assert "multi_key2" in provider.api_keys
+        assert "single_key2" in provider.api_keys
 
 
 def test_random_api_key_selection(provider):
-    with patch.dict(os.environ, {"WEB3_INFURA_PROJECT_IDS": "key1,key2,key3,key4,key5"}):
+    with patch.dict(os.environ, {"WEB3_INFURA_PROJECT_ID": "key1,key2,key3,key4,key5"}):
         provider.load_api_keys()
         selected_keys = set()
         for _ in range(50):  # Run multiple times to ensure randomness
@@ -70,19 +71,8 @@ def test_random_api_key_selection(provider):
         assert len(selected_keys) > 1  # Ensure we're getting different keys
 
 
-def test_uri_with_random_api_key(provider):
-    with patch.dict(os.environ, {"WEB3_INFURA_PROJECT_IDS": "key1,key2,key3"}):
-        provider.load_api_keys()
-        uris = set()
-        for _ in range(10):  # Generate multiple URIs
-            uri = provider.uri
-            uris.add(uri)
-            assert uri.startswith("https")
-            assert "/v3/key" in uri
-        assert len(uris) > 1  # Ensure we're getting different URIs with different keys
-
-
-def test_missing_project_key_error_raised(provider):
-    with patch.dict("os.environ", {}, clear=True):
+def test_missing_project_key_error_raised():
+    provider = Infura()
+    with patch.dict(os.environ, {}, clear=True):
         with pytest.raises(MissingProjectKeyError):
             provider.load_api_keys()

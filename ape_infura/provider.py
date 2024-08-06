@@ -10,12 +10,7 @@ from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 from web3.middleware import geth_poa_middleware
 
-_ENVIRONMENT_VARIABLE_NAMES = (
-    "WEB3_INFURA_PROJECT_ID",
-    "WEB3_INFURA_API_KEY",
-    "WEB3_INFURA_PROJECT_IDS",
-    "WEB3_INFURA_API_KEYS",
-)
+_ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
 # NOTE: https://docs.infura.io/learn/websockets#supported-networks
 _WEBSOCKET_CAPABLE_ECOSYSTEMS = {
     "ethereum",
@@ -51,10 +46,7 @@ class Infura(Web3Provider, UpstreamProvider):
         for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
             env_var = os.environ.get(env_var_name)
             if env_var:
-                if env_var_name.endswith("S"):  # Handle array-like environment variables
-                    self.api_keys.extend([key.strip() for key in env_var.split(",")])
-                else:
-                    self.api_keys.append(env_var)
+                self.api_keys.extend([key.strip() for key in env_var.split(",")])
 
         if not self.api_keys:
             raise MissingProjectKeyError()
