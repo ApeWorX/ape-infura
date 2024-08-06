@@ -1,4 +1,5 @@
 import os
+import random
 from typing import Optional
 
 from ape.api import UpstreamProvider
@@ -9,7 +10,12 @@ from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 from web3.middleware import geth_poa_middleware
 
-_ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
+_ENVIRONMENT_VARIABLE_NAMES = (
+    "WEB3_INFURA_PROJECT_ID",
+    "WEB3_INFURA_API_KEY",
+    "WEB3_INFURA_PROJECT_IDS",
+    "WEB3_INFURA_API_KEYS",
+)
 # NOTE: https://docs.infura.io/learn/websockets#supported-networks
 _WEBSOCKET_CAPABLE_ECOSYSTEMS = {
     "ethereum",
@@ -34,6 +40,27 @@ class MissingProjectKeyError(InfuraProviderError):
 
 class Infura(Web3Provider, UpstreamProvider):
     network_uris: dict[tuple[str, str], str] = {}
+    api_keys: list[str] = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.load_api_keys()
+
+    def load_api_keys(self):
+        self.api_keys = []
+        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
+            env_var = os.environ.get(env_var_name)
+            if env_var:
+                if env_var_name.endswith("S"):  # Handle array-like environment variables
+                    self.api_keys.extend([key.strip() for key in env_var.split(",")])
+                else:
+                    self.api_keys.append(env_var)
+
+        if not self.api_keys:
+            raise MissingProjectKeyError()
+
+    def get_random_api_key(self):
+        return random.choice(self.api_keys)
 
     @property
     def uri(self) -> str:
@@ -42,15 +69,7 @@ class Infura(Web3Provider, UpstreamProvider):
         if (ecosystem_name, network_name) in self.network_uris:
             return self.network_uris[(ecosystem_name, network_name)]
 
-        key = None
-        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
-            env_var = os.environ.get(env_var_name)
-            if env_var:
-                key = env_var
-                break
-
-        if not key:
-            raise MissingProjectKeyError()
+        key = self.get_random_api_key()
 
         prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
         network_uri = f"https://{prefix}{network_name}.infura.io/v3/{key}"

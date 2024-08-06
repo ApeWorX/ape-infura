@@ -82,6 +82,7 @@ jobs:
           run: pytest -m "not fuzzing" -s --cov=src -n auto
           env:
             WEB3_INFURA_PROJECT_ID: ${{ secrets.WEB3_INFURA_PROJECT_ID }}
+            WEB3_INFURA_PROJECT_IDS: ${{ secrets.WEB3_INFURA_PROJECT_IDS }}
 
 # NOTE: uncomment this block after you've marked tests with @pytest.mark.fuzzing
 #    fuzzing:
