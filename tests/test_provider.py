@@ -71,8 +71,7 @@ def test_random_api_key_selection(provider):
         assert len(selected_keys) > 1  # Ensure we're getting different keys
 
 
-def test_missing_project_key_error_raised():
-    provider = Infura()
+def test_missing_project_key_error_raised(provider):
     with patch.dict(os.environ, {}, clear=True):
         with pytest.raises(MissingProjectKeyError):
             provider.load_api_keys()
