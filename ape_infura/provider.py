@@ -44,14 +44,13 @@ class Infura(Web3Provider, UpstreamProvider):
     def load_api_keys(self):
         self.api_keys = []
         for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
-            env_var = os.environ.get(env_var_name)
-            if env_var:
+            if env_var := os.environ.get(env_var_name):
                 self.api_keys.extend([key.strip() for key in env_var.split(",")])
 
         if not self.api_keys:
             raise MissingProjectKeyError()
 
-    def get_random_api_key(self):
+    def get_random_api_key(self) -> str:
         return random.choice(self.api_keys)
 
     @property
