@@ -67,6 +67,19 @@ class Infura(Web3Provider, UpstreamProvider):
         self.network_uris[(ecosystem_name, network_name)] = network_uri
         return network_uri
 
+    def get_new_uri(self) -> str:
+        """
+        To generate a new URI with a new API key. Added to keep backwards compatibity
+        """
+        key = self.get_random_api_key()
+        ecosystem_name = self.network.ecosystem.name
+        network_name = self.network.name
+
+        prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
+        network_uri = f"https://{prefix}{network_name}.infura.io/v3/{key}"
+        self.network_uris[(ecosystem_name, network_name)] = network_uri
+        return network_uri
+
     @property
     def http_uri(self) -> str:
         # NOTE: Overriding `Web3Provider.http_uri` implementation
