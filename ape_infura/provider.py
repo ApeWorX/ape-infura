@@ -35,23 +35,26 @@ class MissingProjectKeyError(InfuraProviderError):
 
 class Infura(Web3Provider, UpstreamProvider):
     network_uris: dict[tuple[str, str], str] = {}
-    api_keys: list[str] = []
+    api_keys: set[str] = set()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.load_api_keys()
 
     def load_api_keys(self):
-        self.api_keys = []
+        self.api_keys = set()
         for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
             if env_var := os.environ.get(env_var_name):
-                self.api_keys.extend([key.strip() for key in env_var.split(",")])
+                self.api_keys.update(set(key.strip() for key in env_var.split(",")))
 
         if not self.api_keys:
             raise MissingProjectKeyError()
 
-    def get_random_api_key(self) -> str:
-        return random.choice(self.api_keys)
+    def __get_random_api_key(self) -> str:
+        """
+        Get a random api key a private method. As self.api_keys are unhashable so have to typecast into list to make it hashable
+        """
+        return random.choice(list(self.api_keys))
 
     @property
     def uri(self) -> str:
@@ -60,20 +63,7 @@ class Infura(Web3Provider, UpstreamProvider):
         if (ecosystem_name, network_name) in self.network_uris:
             return self.network_uris[(ecosystem_name, network_name)]
 
-        key = self.get_random_api_key()
-
-        prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
-        network_uri = f"https://{prefix}{network_name}.infura.io/v3/{key}"
-        self.network_uris[(ecosystem_name, network_name)] = network_uri
-        return network_uri
-
-    def get_new_uri(self) -> str:
-        """
-        To generate a new URI with a new API key. Added to keep backwards compatibity
-        """
-        key = self.get_random_api_key()
-        ecosystem_name = self.network.ecosystem.name
-        network_name = self.network.name
+        key = self.__get_random_api_key()
 
         prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
         network_uri = f"https://{prefix}{network_name}.infura.io/v3/{key}"
@@ -114,6 +104,18 @@ class Infura(Web3Provider, UpstreamProvider):
 
     def disconnect(self):
         self._web3 = None
+
+    def reconnect(self):
+        """
+        Disconnect the connectned API.
+        Refresh the API keys from environment variable.
+        Make the self.network_uris empty otherwise the old network_uri will be returned.
+        Connect again.
+        """
+        self.disconnect()
+        self.load_api_keys()
+        self.network_uris = {}
+        self.connect()
 
     def get_virtual_machine_error(self, exception: Exception, **kwargs) -> VirtualMachineError:
         txn = kwargs.get("txn")

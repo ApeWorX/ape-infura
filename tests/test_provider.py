@@ -61,21 +61,13 @@ def test_load_single_and_multiple_api_keys(provider, mocker):
     assert "single_key2" in provider.api_keys
 
 
-def test_random_api_key_selection(provider, mocker):
-    mocker.patch.dict(os.environ, {"WEB3_INFURA_PROJECT_ID": "key1,key2,key3,key4,key5"})
-    provider.load_api_keys()
-    selected_keys = set()
-    for _ in range(50):  # Run multiple times to ensure randomness
-        selected_keys.add(provider.get_random_api_key())
-    assert len(selected_keys) > 1  # Ensure we're getting different keys
-
-
 def test_uri_with_random_api_key(provider, mocker):
     # mocker.patch.dict(os.environ, {"WEB3_INFURA_PROJECT_ID": "key1, key2, key3, key4, key5, key6"})
     provider.load_api_keys()
     uris = set()
     for _ in range(100):  # Generate multiple URIs
-        uri = provider.get_new_uri()  # Use get_new_uri method to get a URI
+        provider.reconnect()  # connect to a new URI
+        uri = provider.uri
         uris.add(uri)
         assert uri.startswith("https")
         assert "/v3" in uri
