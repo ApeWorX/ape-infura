@@ -107,7 +107,7 @@ class Infura(Web3Provider, UpstreamProvider):
 
     def reconnect(self):
         """
-        Disconnect the connectned API.
+        Disconnect the connected API.
         Refresh the API keys from environment variable.
         Make the self.network_uris empty otherwise the old network_uri will be returned.
         Connect again.
