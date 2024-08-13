@@ -115,7 +115,7 @@ class Infura(Web3Provider, UpstreamProvider):
         self.disconnect()
         self.load_api_keys()
         self.network_uris = {}
-        self.connect()
+        # self.connect()
 
     def get_virtual_machine_error(self, exception: Exception, **kwargs) -> VirtualMachineError:
         txn = kwargs.get("txn")
