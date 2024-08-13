@@ -1,7 +1,6 @@
 import os
 
 import pytest
-import requests
 import websocket  # type: ignore
 from ape.utils import ZERO_ADDRESS
 
