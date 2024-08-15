@@ -4,7 +4,7 @@ import pytest
 import websocket  # type: ignore
 from ape.utils import ZERO_ADDRESS
 
-from ape_infura.provider import _WEBSOCKET_CAPABLE_ECOSYSTEMS, Infura, MissingProjectKeyError
+from ape_infura.provider import _WEBSOCKET_CAPABLE_ECOSYSTEMS, Infura
 
 
 def test_infura_http(provider):

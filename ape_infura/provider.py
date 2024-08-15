@@ -52,7 +52,8 @@ class Infura(Web3Provider, UpstreamProvider):
 
     def __get_random_api_key(self) -> str:
         """
-        Get a random api key a private method. As self.api_keys are unhashable so have to typecast into list to make it hashable
+        Get a random api key a private method. As self.api_keys are unhashable so have to typecast into list
+        to make it hashable
         """
         return random.choice(list(self.api_keys))
 
