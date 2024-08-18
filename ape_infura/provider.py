@@ -52,8 +52,7 @@ class Infura(Web3Provider, UpstreamProvider):
 
     def __get_random_api_key(self) -> str:
         """
-        Get a random api key a private method. As self.api_keys are unhashable so have to typecast into list
-        to make it hashable
+        Get a random api key a private method.
         """
         return random.choice(list(self.api_keys))
 
@@ -104,16 +103,12 @@ class Infura(Web3Provider, UpstreamProvider):
         self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
 
     def disconnect(self):
-        self._web3 = None
-
-    def reconnect(self):
         """
         Disconnect the connected API.
         Refresh the API keys from environment variable.
         Make the self.network_uris empty otherwise the old network_uri will be returned.
-        Connect again.
         """
-        self.disconnect()
+        self._web3 = None
         self.load_api_keys()
         self.network_uris = {}
 

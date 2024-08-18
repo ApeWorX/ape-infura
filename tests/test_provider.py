@@ -66,7 +66,7 @@ def test_uri_with_random_api_key(provider, mocker):
     provider.load_api_keys()
     uris = set()
     for _ in range(100):  # Generate multiple URIs
-        provider.reconnect()  # connect to a new URI
+        provider.disconnect()  # connect to a new URI
         uri = provider.uri
         uris.add(uri)
         assert uri.startswith("https")
