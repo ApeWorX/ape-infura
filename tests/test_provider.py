@@ -1,3 +1,5 @@
+import os
+
 import pytest
 import websocket  # type: ignore
 from ape.utils import ZERO_ADDRESS
@@ -31,3 +33,42 @@ def test_infura_ws(provider):
 
     except Exception as err:
         pytest.fail(f"Websocket URI not accessible. Reason: {err}")
+
+
+def test_load_multiple_api_keys(provider, mocker):
+    mocker.patch.dict(
+        os.environ,
+        {"WEB3_INFURA_PROJECT_ID": "key1,key2,key3", "WEB3_INFURA_API_KEY": "key4,key5,key6"},
+    )
+    provider.load_api_keys()
+    # As there will be API keys in the ENV as well
+    assert len(provider.api_keys) == 6
+    assert "key1" in provider.api_keys
+    assert "key6" in provider.api_keys
+
+
+def test_load_single_and_multiple_api_keys(provider, mocker):
+    mocker.patch.dict(
+        os.environ,
+        {
+            "WEB3_INFURA_PROJECT_ID": "single_key1",
+            "WEB3_INFURA_API_KEY": "single_key2",
+        },
+    )
+    provider.load_api_keys()
+    assert len(provider.api_keys) == 2
+    assert "single_key1" in provider.api_keys
+    assert "single_key2" in provider.api_keys
+
+
+def test_uri_with_random_api_key(provider, mocker):
+    mocker.patch.dict(os.environ, {"WEB3_INFURA_PROJECT_ID": "key1, key2, key3, key4, key5, key6"})
+    provider.load_api_keys()
+    uris = set()
+    for _ in range(100):  # Generate multiple URIs
+        provider.disconnect()  # connect to a new URI
+        uri = provider.uri
+        uris.add(uri)
+        assert uri.startswith("https")
+        assert "/v3" in uri
+    assert len(uris) > 1  # Ensure we're getting different URIs with different

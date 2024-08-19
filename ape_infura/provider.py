@@ -1,4 +1,5 @@
 import os
+import random
 from typing import Optional
 
 from ape.api import UpstreamProvider
@@ -34,6 +35,26 @@ class MissingProjectKeyError(InfuraProviderError):
 
 class Infura(Web3Provider, UpstreamProvider):
     network_uris: dict[tuple[str, str], str] = {}
+    api_keys: set[str] = set()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.load_api_keys()
+
+    def load_api_keys(self):
+        self.api_keys = set()
+        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
+            if env_var := os.environ.get(env_var_name):
+                self.api_keys.update(set(key.strip() for key in env_var.split(",")))
+
+        if not self.api_keys:
+            raise MissingProjectKeyError()
+
+    def __get_random_api_key(self) -> str:
+        """
+        Get a random api key a private method.
+        """
+        return random.choice(list(self.api_keys))
 
     @property
     def uri(self) -> str:
@@ -42,15 +63,7 @@ class Infura(Web3Provider, UpstreamProvider):
         if (ecosystem_name, network_name) in self.network_uris:
             return self.network_uris[(ecosystem_name, network_name)]
 
-        key = None
-        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
-            env_var = os.environ.get(env_var_name)
-            if env_var:
-                key = env_var
-                break
-
-        if not key:
-            raise MissingProjectKeyError()
+        key = self.__get_random_api_key()
 
         prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
         network_uri = f"https://{prefix}{network_name}.infura.io/v3/{key}"
@@ -90,7 +103,14 @@ class Infura(Web3Provider, UpstreamProvider):
         self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
 
     def disconnect(self):
+        """
+        Disconnect the connected API.
+        Refresh the API keys from environment variable.
+        Make the self.network_uris empty otherwise the old network_uri will be returned.
+        """
         self._web3 = None
+        self.load_api_keys()
+        self.network_uris = {}
 
     def get_virtual_machine_error(self, exception: Exception, **kwargs) -> VirtualMachineError:
         txn = kwargs.get("txn")
