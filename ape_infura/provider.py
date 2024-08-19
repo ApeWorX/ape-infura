@@ -1,5 +1,6 @@
 import os
 import random
+from functools import cached_property
 from typing import Optional
 
 from ape.api import UpstreamProvider
@@ -35,26 +36,30 @@ class MissingProjectKeyError(InfuraProviderError):
 
 class Infura(Web3Provider, UpstreamProvider):
     network_uris: dict[tuple[str, str], str] = {}
-    api_keys: set[str] = set()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.load_api_keys()
-
-    def load_api_keys(self):
-        self.api_keys = set()
-        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
-            if env_var := os.environ.get(env_var_name):
-                self.api_keys.update(set(key.strip() for key in env_var.split(",")))
-
-        if not self.api_keys:
-            raise MissingProjectKeyError()
 
     def __get_random_api_key(self) -> str:
         """
         Get a random api key a private method.
         """
-        return random.choice(list(self.api_keys))
+        if keys := self._api_keys:
+            return random.choice(list(keys))
+
+        raise MissingProjectKeyError()
+
+    @cached_property
+    def _api_keys(self) -> set[str]:
+        api_keys = set()
+        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
+            if env_var := os.environ.get(env_var_name):
+                api_keys.update(set(key.strip() for key in env_var.split(",")))
+
+        if not api_keys:
+            raise MissingProjectKeyError()
+
+        return api_keys
 
     @property
     def uri(self) -> str:
@@ -109,7 +114,7 @@ class Infura(Web3Provider, UpstreamProvider):
         Make the self.network_uris empty otherwise the old network_uri will be returned.
         """
         self._web3 = None
-        self.load_api_keys()
+        (self.__dict__ or {}).pop("_api_keys", None)
         self.network_uris = {}
 
     def get_virtual_machine_error(self, exception: Exception, **kwargs) -> VirtualMachineError:

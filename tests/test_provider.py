@@ -36,18 +36,26 @@ def test_infura_ws(provider):
 
 
 def test_load_multiple_api_keys(provider, mocker):
+    original_env = os.environ.copy()
     mocker.patch.dict(
         os.environ,
         {"WEB3_INFURA_PROJECT_ID": "key1,key2,key3", "WEB3_INFURA_API_KEY": "key4,key5,key6"},
     )
-    provider.load_api_keys()
     # As there will be API keys in the ENV as well
-    assert len(provider.api_keys) == 6
-    assert "key1" in provider.api_keys
-    assert "key6" in provider.api_keys
+    provider.disconnect()
+    assert len(provider._api_keys) == 6
+    assert "key1" in provider._api_keys
+    assert "key6" in provider._api_keys
+
+    os.environ.clear()
+    os.environ.update(original_env)
+
+    # Disconnect so key isn't cached.
+    provider.disconnect()
 
 
 def test_load_single_and_multiple_api_keys(provider, mocker):
+    original_env = os.environ.copy()
     mocker.patch.dict(
         os.environ,
         {
@@ -55,15 +63,22 @@ def test_load_single_and_multiple_api_keys(provider, mocker):
             "WEB3_INFURA_API_KEY": "single_key2",
         },
     )
-    provider.load_api_keys()
-    assert len(provider.api_keys) == 2
-    assert "single_key1" in provider.api_keys
-    assert "single_key2" in provider.api_keys
+    provider.disconnect()
+    assert len(provider._api_keys) == 2
+    assert "single_key1" in provider._api_keys
+    assert "single_key2" in provider._api_keys
+
+    os.environ.clear()
+    os.environ.update(original_env)
+
+    # Disconnect so key isn't cached.
+    provider.disconnect()
 
 
 def test_uri_with_random_api_key(provider, mocker):
+    original_env = os.environ.copy()
     mocker.patch.dict(os.environ, {"WEB3_INFURA_PROJECT_ID": "key1, key2, key3, key4, key5, key6"})
-    provider.load_api_keys()
+
     uris = set()
     for _ in range(100):  # Generate multiple URIs
         provider.disconnect()  # connect to a new URI
@@ -72,3 +87,9 @@ def test_uri_with_random_api_key(provider, mocker):
         assert uri.startswith("https")
         assert "/v3" in uri
     assert len(uris) > 1  # Ensure we're getting different URIs with different
+
+    os.environ.clear()
+    os.environ.update(original_env)
+
+    # Disconnect so key isn't cached.
+    provider.disconnect()
