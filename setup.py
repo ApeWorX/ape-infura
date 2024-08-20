@@ -10,6 +10,7 @@ extras_require = {
         "pytest-cov",  # Coverage analyzer plugin
         "hypothesis>=6.2.0,<7.0",  # Strategy-based fuzzer
         "ape-arbitrum",  # For integration testing
+        "ape-avalanche",  # For integration testing
         "ape-blast",  # For integration testing
         "ape-optimism",  # For integration testing
         "ape-polygon",  # For integration testing
@@ -17,10 +18,10 @@ extras_require = {
         "websocket-client",  # Used for web socket integration testing
     ],
     "lint": [
-        "black>=24.4.2,<25",  # Auto-formatter and linter
-        "mypy>=1.10.0,<2",  # Static type analyzer
+        "black>=24.8.0,<25",  # Auto-formatter and linter
+        "mypy>=1.11.1,<2",  # Static type analyzer
         "types-setuptools",  # Needed for mypy type shed
-        "flake8>=7.0.0,<8",  # Style linter
+        "flake8>=7.1.1,<8",  # Style linter
         "flake8-breakpoint>=1.1.0,<2",  # Detect breakpoints left in code
         "flake8-print>=5.0.0,<6",  # Detect print statements left in code
         "isort>=5.13.2,<6",  # Import sorting linter

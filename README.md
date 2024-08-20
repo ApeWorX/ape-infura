@@ -3,12 +3,13 @@
 Use the [Infura](https://infura.io/) provider plugin to interact with blockchains via APIs.
 This plugin supports the following ecosystems:
 
-- Ethereum
-- Polygon
 - Arbitrum
-- Optimism
+- Avalanche
 - Blast
+- Ethereum
 - ~~Linea~~ (awaiting ape-linea update)
+- Optimism
+- Polygon
 
 ## Dependencies
 
