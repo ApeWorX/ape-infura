@@ -20,3 +20,6 @@ def __getattr__(name: str):
     import ape_infura.provider as module
 
     return getattr(module, name)
+
+
+__all__ = ["NETWORKS"]
