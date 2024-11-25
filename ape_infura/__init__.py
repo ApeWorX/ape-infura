@@ -16,7 +16,7 @@ def __getattr__(name: str):
         from ape_infura.provider import Infura
 
         return Infura
-    
+
     elif name == "NETWORKS":
         from ape_infura.utils import NETWORKS
 
