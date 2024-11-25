@@ -5,11 +5,20 @@ This plugin supports the following ecosystems:
 
 - Arbitrum
 - Avalanche
+- Base
 - Blast
+- BSC
+- Celo
 - Ethereum
-- ~~Linea~~ (awaiting ape-linea update)
+- Linea
+- Mantle
 - Optimism
+- Palm
 - Polygon
+- Scroll
+- Starknet
+- Unichain
+- zkSync
 
 ## Dependencies
 

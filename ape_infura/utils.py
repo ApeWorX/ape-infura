@@ -7,25 +7,54 @@ NETWORKS = {
         "fuji",
         "mainnet",
     ],
+    "base": [
+        "mainnet",
+        "sepolia",
+    ],
     "blast": [
         "mainnet",
         "sepolia",
+    ],
+    "bsc": ["mainnet", "opbnb", "opbnb-testnet", "testnet"],
+    "celo": [
+        "alfajores",
+        "mainnet",
     ],
     "ethereum": [
         "holesky",
         "mainnet",
         "sepolia",
     ],
-    # TODO: Comment out after ape-linea supports 0.7
-    # "linea": [
-    #     "mainnet",
-    # ],
+    "linea": [
+        "mainnet",
+        "sepolia",
+    ],
+    "mantle": [
+        "mainnet",
+        "sepolia",
+    ],
     "optimism": [
         "mainnet",
         "sepolia",
     ],
-    "polygon": [
+    "palm": [
         "mainnet",
+        "testnet",
+    ],
+    "polygon": [
         "amoy",
+        "mainnet",
+    ],
+    "scroll": ["mainnet", "sepolia"],
+    "starknet": [
+        "mainnet",
+        "sepolia",
+    ],
+    "unichain": [
+        "sepolia",
+    ],
+    "zksync": [
+        "mainnet",
+        "sepolia",
     ],
 }
