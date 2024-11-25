@@ -22,9 +22,8 @@ def __getattr__(name: str):
 
         return NETWORKS
 
-    import ape_infura.provider as module
-
-    return getattr(module, name)
+    else:
+        raise AttributeError(name)
 
 
 __all__ = [
