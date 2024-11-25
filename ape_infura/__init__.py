@@ -12,11 +12,21 @@ def providers():
 
 
 def __getattr__(name: str):
-    if name == "NETWORKS":
+    if name == "Infura":
+        from ape_infura.provider import Infura
+
+        return Infura
+
+    elif name == "NETWORKS":
         from ape_infura.utils import NETWORKS
 
         return NETWORKS
 
-    import ape_infura.provider as module
+    else:
+        raise AttributeError(name)
 
-    return getattr(module, name)
+
+__all__ = [
+    "Infura",
+    "NETWORKS",
+]
