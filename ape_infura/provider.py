@@ -97,8 +97,15 @@ class Infura(Web3Provider, UpstreamProvider):
 
         key = self.__get_random_api_key()
 
-        prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
-        network_uri = f"https://{prefix}{network_name}.infura.io/v3/{key}"
+        if ecosystem_name == "bsc" and "opbnb" in network_name:
+            sub_network = network_name.split("-")[-1] if "-" in network_name else "mainnet"
+            prefix = f"opbnb-{sub_network}"
+        else:
+            prefix = f"{ecosystem_name}-" if ecosystem_name != "ethereum" else ""
+            prefix = f"{prefix}{network_name}"
+
+        network_uri = f"https://{prefix}.infura.io/v3/{key}"
+
         self.network_uris[(ecosystem_name, network_name)] = network_uri
         return network_uri
 
@@ -151,6 +158,9 @@ class Infura(Web3Provider, UpstreamProvider):
                 block = self.web3.eth.get_block(block_id)  # type: ignore
             except ExtraDataLengthError:
                 return True
+            except Exception:
+                # Some nodes are "light" and may not find earliest blocks.
+                continue
             else:
                 if (
                     "proofOfAuthorityData" in block
