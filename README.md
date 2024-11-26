@@ -1,6 +1,6 @@
 # Quick Start
 
-Use the [Infura](https://infura.io/) provider plugin to interact with blockchains via APIs.
+Use the [Metamask Developer](https://developer.metamask.io/) (F.K.A. Infura) provider plugin to interact with blockchains via APIs.
 This plugin supports the following ecosystems:
 
 - Arbitrum
