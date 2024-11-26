@@ -7,7 +7,7 @@ from ape.utils import ZERO_ADDRESS
 from web3.exceptions import ExtraDataLengthError
 from web3.middleware import geth_poa_middleware
 
-from ape_infura.provider import _WEBSOCKET_CAPABLE_ECOSYSTEMS, Infura
+from ape_infura.provider import _WEBSOCKET_CAPABLE_NETWORKS, Infura
 
 
 def test_infura_http(provider):
@@ -23,7 +23,7 @@ def test_infura_http(provider):
 
 def test_infura_ws(provider):
     ecosystem = provider.network.ecosystem.name
-    if ecosystem not in _WEBSOCKET_CAPABLE_ECOSYSTEMS:
+    if provider.network.name not in _WEBSOCKET_CAPABLE_NETWORKS.get(ecosystem, []):
         assert provider.ws_uri is None
         return
 

@@ -15,12 +15,18 @@ from web3.middleware.validation import MAX_EXTRADATA_LENGTH
 
 _ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
 # NOTE: https://docs.infura.io/learn/websockets#supported-networks
-_WEBSOCKET_CAPABLE_ECOSYSTEMS = {
-    "ethereum",
-    "arbitrum",
-    "optimism",
-    "polygon",
-    "linea",
+_WEBSOCKET_CAPABLE_NETWORKS = {
+    "arbitrum": ("mainnet", "sepolia"),
+    "avalanche": ("fuji", "mainnet"),
+    "base": ("mainnet", "sepolia"),
+    "blast": ("mainnet",),
+    "bsc": ("mainnet", "opbnb"),
+    "ethereum": ("holesky", "mainnet", "sepolia"),
+    "linea": ("mainnet", "sepolia"),
+    "mainnet": ("mainnet",),
+    "optimism": ("mainnet", "sepolia"),
+    "polygon": ("amoy", "mainnet"),
+    "scroll": ("mainnet",),
 }
 
 
@@ -85,7 +91,9 @@ class Infura(Web3Provider, UpstreamProvider):
     @property
     def ws_uri(self) -> Optional[str]:
         # NOTE: Overriding `Web3Provider.ws_uri` implementation
-        if self.network.ecosystem.name not in _WEBSOCKET_CAPABLE_ECOSYSTEMS:
+        ecosystem_name = self.network.ecosystem.name
+        network_name = self.network.name
+        if network_name not in _WEBSOCKET_CAPABLE_NETWORKS.get(ecosystem_name, []):
             return None
 
         # Remove `http` in default URI w/ `ws`, also infura adds `/ws` to URI
