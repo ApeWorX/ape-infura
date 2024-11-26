@@ -8,8 +8,10 @@ from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineErro
 from ape_ethereum.provider import Web3Provider
 from web3 import HTTPProvider, Web3
 from web3.exceptions import ContractLogicError as Web3ContractLogicError
+from web3.exceptions import ExtraDataLengthError
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 from web3.middleware import geth_poa_middleware
+from web3.middleware.validation import MAX_EXTRADATA_LENGTH
 
 _ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
 # NOTE: https://docs.infura.io/learn/websockets#supported-networks
@@ -96,6 +98,16 @@ class Infura(Web3Provider, UpstreamProvider):
     def connect(self):
         self._web3 = Web3(HTTPProvider(self.uri))
 
+        if self._needs_poa_middleware:
+            self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+        self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
+
+    @property
+    def _needs_poa_middleware(self) -> bool:
+        if self._web3 is None:
+            return False
+
         # Any chain that *began* as PoA needs the middleware for pre-merge blocks
         optimism = (10, 420)
         polygon = (137, 80001, 80002)
@@ -103,9 +115,21 @@ class Infura(Web3Provider, UpstreamProvider):
         blast = (11155111, 168587773)
 
         if self._web3.eth.chain_id in (*optimism, *polygon, *linea, *blast):
-            self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
+            return True
 
-        self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
+        for block_id in ("earliest", "latest"):
+            try:
+                block = self.web3.eth.get_block(block_id)  # type: ignore
+            except ExtraDataLengthError:
+                return True
+            else:
+                if (
+                    "proofOfAuthorityData" in block
+                    or len(block.get("extraData", "")) > MAX_EXTRADATA_LENGTH
+                ):
+                    return True
+
+        return False
 
     def disconnect(self):
         """

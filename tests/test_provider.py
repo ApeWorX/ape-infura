@@ -2,7 +2,10 @@ import os
 
 import pytest
 import websocket  # type: ignore
+from ape import networks
 from ape.utils import ZERO_ADDRESS
+from web3.exceptions import ExtraDataLengthError
+from web3.middleware import geth_poa_middleware
 
 from ape_infura.provider import _WEBSOCKET_CAPABLE_ECOSYSTEMS, Infura
 
@@ -93,3 +96,13 @@ def test_uri_with_random_api_key(provider, mocker):
 
     # Disconnect so key isn't cached.
     provider.disconnect()
+
+
+def test_dynamic_poa_check(mocker):
+    real = networks.ethereum.sepolia.get_provider("infura")
+    mock_web3 = mocker.MagicMock()
+    mock_web3.eth.get_block.side_effect = ExtraDataLengthError
+    infura = Infura(name=real.name, network=real.network)
+    infura._web3 = mock_web3
+    infura.connect()
+    assert geth_poa_middleware in infura.web3.middleware_onion
