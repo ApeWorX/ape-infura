@@ -60,6 +60,13 @@ export WEB3_INFURA_PROJECT_ID=MY_API_TOKEN
 export WEB3_INFURA_PROJECT_ID=MY_API_TOKEN1, MY_API_TOKEN2
 ```
 
+Additionally, if your app requires an API secret as well, use either of the following environment variables:
+
+- WEB3_INFURA_PROJECT_ID
+- WEB3_INFURA_API_KEY
+
+And each request will use the secret as a form of authentication.
+
 To use the Infura provider plugin in most commands, set it via the `--network` option:
 
 ```bash

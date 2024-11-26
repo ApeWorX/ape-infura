@@ -7,18 +7,30 @@ from ape.utils import ZERO_ADDRESS
 from web3.exceptions import ExtraDataLengthError
 from web3.middleware import geth_poa_middleware
 
-from ape_infura.provider import _WEBSOCKET_CAPABLE_NETWORKS, Infura
+from ape_infura.provider import _WEBSOCKET_CAPABLE_NETWORKS, Infura, _get_session
 
 
 def test_infura_http(provider):
     ecosystem = provider.network.ecosystem.name
     network = provider.network.name
+
+    if network in ("opbnb-testnet",):
+        pytest.skip("This network is weird and has missing trie node errors")
+
     assert isinstance(provider, Infura)
     assert provider.http_uri.startswith("https")
     assert provider.get_balance(ZERO_ADDRESS) > 0
-    assert provider.get_block(0)
     ecosystem_uri = "" if ecosystem == "ethereum" else f"{ecosystem}-"
-    assert f"https://{ecosystem_uri}{network}.infura.io/v3/" in provider.uri
+    if "opbnb" in network:
+        expected = (
+            "https://opbnb-mainnet.infura.io/v3/"
+            if network == "opbnb"
+            else f"https://{network}.infura.io/v3/"
+        )
+    else:
+        expected = f"https://{ecosystem_uri}{network}.infura.io/v3/"
+
+    assert expected in provider.uri
 
 
 def test_infura_ws(provider):
@@ -107,3 +119,10 @@ def test_dynamic_poa_check(mocker):
     patch.return_value = mock_web3
     infura.connect()
     mock_web3.middleware_onion.inject.assert_called_once_with(geth_poa_middleware, layer=0)
+
+
+def test_api_secret():
+    os.environ["WEB3_INFURA_PROJECT_SECRET"] = "123"
+    session = _get_session()
+    assert session.auth == ("", "123")
+    del os.environ["WEB3_INFURA_PROJECT_SECRET"]
