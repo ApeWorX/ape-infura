@@ -6,6 +6,7 @@ from typing import Optional
 from ape.api import UpstreamProvider
 from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineError
 from ape_ethereum.provider import Web3Provider
+from requests import Session
 from web3 import HTTPProvider, Web3
 from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.exceptions import ExtraDataLengthError
@@ -13,7 +14,9 @@ from web3.gas_strategies.rpc import rpc_gas_price_strategy
 from web3.middleware import geth_poa_middleware
 from web3.middleware.validation import MAX_EXTRADATA_LENGTH
 
-_ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
+_API_KEY_ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
+_API_SECRET_ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_SECRET", "WEB3_INFURA_API_SECRET")
+
 # NOTE: https://docs.infura.io/learn/websockets#supported-networks
 _WEBSOCKET_CAPABLE_NETWORKS = {
     "arbitrum": ("mainnet", "sepolia"),
@@ -38,8 +41,16 @@ class InfuraProviderError(ProviderError):
 
 class MissingProjectKeyError(InfuraProviderError):
     def __init__(self):
-        env_var_str = ", ".join([f"${n}" for n in _ENVIRONMENT_VARIABLE_NAMES])
+        env_var_str = ", ".join([f"${n}" for n in _API_KEY_ENVIRONMENT_VARIABLE_NAMES])
         super().__init__(f"Must set one of {env_var_str}")
+
+
+def _get_api_key_secret() -> Optional[str]:
+    for name in _API_SECRET_ENVIRONMENT_VARIABLE_NAMES:
+        if secret := os.environ.get(name):
+            return secret
+
+    return None
 
 
 class Infura(Web3Provider, UpstreamProvider):
@@ -60,7 +71,7 @@ class Infura(Web3Provider, UpstreamProvider):
     @cached_property
     def _api_keys(self) -> set[str]:
         api_keys = set()
-        for env_var_name in _ENVIRONMENT_VARIABLE_NAMES:
+        for env_var_name in _API_KEY_ENVIRONMENT_VARIABLE_NAMES:
             if env_var := os.environ.get(env_var_name):
                 api_keys.update(set(key.strip() for key in env_var.split(",")))
 
@@ -103,14 +114,6 @@ class Infura(Web3Provider, UpstreamProvider):
     def connection_str(self) -> str:
         return self.uri
 
-    def connect(self):
-        self._web3 = _create_web3(HTTPProvider(self.uri))
-
-        if self._needs_poa_middleware:
-            self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
-
-        self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
-
     @property
     def _needs_poa_middleware(self) -> bool:
         if self._web3 is None:
@@ -138,6 +141,14 @@ class Infura(Web3Provider, UpstreamProvider):
                     return True
 
         return False
+
+    def connect(self):
+        session = Session()
+        if api_secret := _get_api_key_secret():
+            session.auth = ("", api_secret)
+
+        http_provider = HTTPProvider(self.uri, session=session)
+        self._web3 = Web3(http_provider)
 
     def disconnect(self):
         """
