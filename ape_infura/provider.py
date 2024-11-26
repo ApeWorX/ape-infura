@@ -96,7 +96,7 @@ class Infura(Web3Provider, UpstreamProvider):
         return self.uri
 
     def connect(self):
-        self._web3 = Web3(HTTPProvider(self.uri))
+        self._web3 = _create_web3(HTTPProvider(self.uri))
 
         if self._needs_poa_middleware:
             self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
@@ -173,3 +173,7 @@ class Infura(Web3Provider, UpstreamProvider):
                 return ContractLogicError(txn=txn)
 
         return VirtualMachineError(message, txn=txn)
+
+
+def _create_web3(http_provider: HTTPProvider) -> Web3:
+    return Web3(http_provider)

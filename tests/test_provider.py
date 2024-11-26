@@ -99,10 +99,11 @@ def test_uri_with_random_api_key(provider, mocker):
 
 
 def test_dynamic_poa_check(mocker):
-    real = networks.ethereum.sepolia.get_provider("infura")
+    real = networks.ethereum.holesky.get_provider("infura")
     mock_web3 = mocker.MagicMock()
     mock_web3.eth.get_block.side_effect = ExtraDataLengthError
     infura = Infura(name=real.name, network=real.network)
-    infura._web3 = mock_web3
+    patch = mocker.patch("ape_infura.provider._create_web3")
+    patch.return_value = mock_web3
     infura.connect()
-    assert geth_poa_middleware in infura.web3.middleware_onion
+    mock_web3.middleware_onion.inject.assert_called_once_with(geth_poa_middleware, layer=0)
