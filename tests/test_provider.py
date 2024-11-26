@@ -7,7 +7,7 @@ from ape.utils import ZERO_ADDRESS
 from web3.exceptions import ExtraDataLengthError
 from web3.middleware import geth_poa_middleware
 
-from ape_infura.provider import _WEBSOCKET_CAPABLE_NETWORKS, Infura
+from ape_infura.provider import _WEBSOCKET_CAPABLE_NETWORKS, Infura, _get_session
 
 
 def test_infura_http(provider):
@@ -111,8 +111,6 @@ def test_dynamic_poa_check(mocker):
 
 def test_api_secret():
     os.environ["WEB3_INFURA_PROJECT_SECRET"] = "123"
-    mainnet = networks.ethereum.mainnet
-    infura = Infura(name="infura", network=mainnet)
     session = _get_session()
     assert session.auth == ("", "123")
     del os.environ["WEB3_INFURA_PROJECT_SECRET"]

@@ -122,17 +122,20 @@ class Infura(Web3Provider, UpstreamProvider):
     def connection_str(self) -> str:
         return self.uri
 
+    def connect(self):
+        session = _get_session()
+        http_provider = HTTPProvider(self.uri, session=session)
+        self._web3 = _create_web3(http_provider)
+
+        if self._needs_poa_middleware:
+            self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+        self._web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
+
     @property
     def _needs_poa_middleware(self) -> bool:
         if self._web3 is None:
             return False
-
-    def connect(self):
-        session = _get_session()
-        session.auth = ("", api_secret)
-
-        http_provider = HTTPProvider(self.uri, session=session)
-        self._web3 = Web3(http_provider)
 
         # Any chain that *began* as PoA needs the middleware for pre-merge blocks
         optimism = (10, 420)
