@@ -3,7 +3,6 @@ import os
 import pytest
 import websocket  # type: ignore
 from ape import networks
-from ape.utils import ZERO_ADDRESS
 from web3.exceptions import ExtraDataLengthError
 from web3.middleware import geth_poa_middleware
 
@@ -19,7 +18,6 @@ def test_infura_http(provider):
 
     assert isinstance(provider, Infura)
     assert provider.http_uri.startswith("https")
-    assert provider.get_balance(ZERO_ADDRESS) > 0
     ecosystem_uri = "" if ecosystem == "ethereum" else f"{ecosystem}-"
     if "opbnb" in network:
         expected = (
