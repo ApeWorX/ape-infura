@@ -107,3 +107,12 @@ def test_dynamic_poa_check(mocker):
     patch.return_value = mock_web3
     infura.connect()
     mock_web3.middleware_onion.inject.assert_called_once_with(geth_poa_middleware, layer=0)
+
+
+def test_api_secret():
+    os.environ["WEB3_INFURA_PROJECT_SECRET"] = "123"
+    mainnet = networks.ethereum.mainnet
+    infura = Infura(name="infura", network=mainnet)
+    session = _get_session()
+    assert session.auth == ("", "123")
+    del os.environ["WEB3_INFURA_PROJECT_SECRET"]

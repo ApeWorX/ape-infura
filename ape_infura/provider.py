@@ -53,6 +53,14 @@ def _get_api_key_secret() -> Optional[str]:
     return None
 
 
+def _get_session() -> Session:
+    session = Session()
+    if api_secret := _get_api_key_secret():
+        session.auth = ("", api_secret)
+
+    return session
+
+
 class Infura(Web3Provider, UpstreamProvider):
     network_uris: dict[tuple[str, str], str] = {}
 
@@ -119,6 +127,13 @@ class Infura(Web3Provider, UpstreamProvider):
         if self._web3 is None:
             return False
 
+    def connect(self):
+        session = _get_session()
+        session.auth = ("", api_secret)
+
+        http_provider = HTTPProvider(self.uri, session=session)
+        self._web3 = Web3(http_provider)
+
         # Any chain that *began* as PoA needs the middleware for pre-merge blocks
         optimism = (10, 420)
         polygon = (137, 80001, 80002)
@@ -141,14 +156,6 @@ class Infura(Web3Provider, UpstreamProvider):
                     return True
 
         return False
-
-    def connect(self):
-        session = Session()
-        if api_secret := _get_api_key_secret():
-            session.auth = ("", api_secret)
-
-        http_provider = HTTPProvider(self.uri, session=session)
-        self._web3 = Web3(http_provider)
 
     def disconnect(self):
         """
