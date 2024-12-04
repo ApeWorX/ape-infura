@@ -4,6 +4,7 @@ import pytest
 import websocket  # type: ignore
 from ape import networks
 from web3.exceptions import ExtraDataLengthError
+
 try:
     from web3.middleware import ExtraDataToPOAMiddleware  # type: ignore
 except ImportError:
