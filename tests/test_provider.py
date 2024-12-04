@@ -4,7 +4,10 @@ import pytest
 import websocket  # type: ignore
 from ape import networks
 from web3.exceptions import ExtraDataLengthError
-from web3.middleware import geth_poa_middleware
+try:
+    from web3.middleware import ExtraDataToPOAMiddleware  # type: ignore
+except ImportError:
+    from web3.middleware import geth_poa_middleware as ExtraDataToPOAMiddleware  # type: ignore
 
 from ape_infura.provider import _WEBSOCKET_CAPABLE_NETWORKS, Infura, _get_session
 
@@ -116,7 +119,7 @@ def test_dynamic_poa_check(mocker):
     patch = mocker.patch("ape_infura.provider._create_web3")
     patch.return_value = mock_web3
     infura.connect()
-    mock_web3.middleware_onion.inject.assert_called_once_with(geth_poa_middleware, layer=0)
+    mock_web3.middleware_onion.inject.assert_called_once_with(ExtraDataToPOAMiddleware, layer=0)
 
 
 def test_api_secret():
