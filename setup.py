@@ -41,7 +41,7 @@ extras_require = {
         "sphinx-plausible>=0.1.2,<0.2",
     ],
     "release": [  # `release` GitHub Action job uses this
-        "setuptools>=72.2.0",  # Installation tool
+        "setuptools>=75.6.0",  # Installation tool
         "setuptools-scm",  # Installation tool
         "wheel",  # Packaging tool
         "twine",  # Package upload tool
@@ -102,5 +102,6 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
 )
