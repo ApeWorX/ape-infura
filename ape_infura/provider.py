@@ -1,12 +1,15 @@
 import os
 import random
+import time
+from collections.abc import Callable
 from functools import cached_property
 from typing import Optional
 
 from ape.api import UpstreamProvider
 from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineError
+from ape.logging import logger
 from ape_ethereum.provider import Web3Provider
-from requests import Session
+from requests import HTTPError, Session
 from web3 import HTTPProvider, Web3
 from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.exceptions import ExtraDataLengthError
@@ -16,6 +19,7 @@ try:
     from web3.middleware import ExtraDataToPOAMiddleware  # type: ignore
 except ImportError:
     from web3.middleware import geth_poa_middleware as ExtraDataToPOAMiddleware  # type: ignore
+
 from web3.middleware.validation import MAX_EXTRADATA_LENGTH
 
 _API_KEY_ENVIRONMENT_VARIABLE_NAMES = ("WEB3_INFURA_PROJECT_ID", "WEB3_INFURA_API_KEY")
@@ -35,6 +39,9 @@ _WEBSOCKET_CAPABLE_NETWORKS = {
     "polygon": ("amoy", "mainnet"),
     "scroll": ("mainnet",),
 }
+
+_MAX_REQUEST_RETRIES = 15  # Number of retries before giving up
+_REQUEST_RETRY_DELAY = 5  # Delay in seconds between retries
 
 
 class InfuraProviderError(ProviderError):
@@ -133,6 +140,10 @@ class Infura(Web3Provider, UpstreamProvider):
     def connection_str(self) -> str:
         return self.uri
 
+    @property
+    def chain_id(self):
+        return _run_with_retry(lambda: self._web3.eth.chain_id)
+
     def connect(self):
         session = _get_session()
         http_provider = HTTPProvider(self.uri, session=session)
@@ -154,7 +165,8 @@ class Infura(Web3Provider, UpstreamProvider):
         linea = (59144, 59140)
         blast = (11155111, 168587773)
 
-        if self._web3.eth.chain_id in (*optimism, *polygon, *linea, *blast):
+        chain_id = self.chain_id  # NOTE: Includes retry mechanism
+        if chain_id in (*optimism, *polygon, *linea, *blast):
             return True
 
         for block_id in ("earliest", "latest"):
@@ -220,3 +232,22 @@ class Infura(Web3Provider, UpstreamProvider):
 
 def _create_web3(http_provider: HTTPProvider) -> Web3:
     return Web3(http_provider)
+
+
+def _run_with_retry(
+    func: Callable, max_retries: int = _MAX_REQUEST_RETRIES, retry_delay: int = _REQUEST_RETRY_DELAY
+):
+    retries = 0
+    while retries < max_retries:
+        try:
+            return func()
+        except HTTPError as err:
+            if err.response.status_code == 429:
+                logger.debug(f"429 Too Many Requests. Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+                retries += 1
+                retry_delay += retry_delay
+            else:
+                raise  # Re-raise non-429 HTTP errors
+
+    raise ProviderError(f"Exceeded maximum retries ({max_retries}).")
