@@ -33,12 +33,7 @@ extras_require = {
         "mdformat-pyproject>=0.0.2",  # Allows configuring in pyproject.toml
     ],
     "doc": [
-        "myst-parser>=1.0.0,<2",  # Parse markdown docs
-        "sphinx-click>=4.4.0,<5",  # For documenting CLI
-        "Sphinx>=6.1.3,<7",  # Documentation generator
-        "sphinx_rtd_theme>=1.2.0,<2",  # Readthedocs.org theme
-        "sphinxcontrib-napoleon>=0.7",  # Allow Google-style documentation
-        "sphinx-plausible>=0.1.2,<0.2",
+        "sphinx-ape",
     ],
     "release": [  # `release` GitHub Action job uses this
         "setuptools>=75.6.0",  # Installation tool
@@ -81,6 +76,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "eth-ape>=0.8.1,<0.9",
+        "web3>=6.20.1,<8",
+        "requests>=2.28.1,<3",
     ],
     python_requires=">=3.9,<4",
     extras_require=extras_require,
