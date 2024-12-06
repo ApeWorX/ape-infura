@@ -40,7 +40,7 @@ _WEBSOCKET_CAPABLE_NETWORKS = {
     "scroll": ("mainnet",),
 }
 
-_MAX_REQUEST_RETRIES = 5  # Number of retries before giving up
+_MAX_REQUEST_RETRIES = 15  # Number of retries before giving up
 _REQUEST_RETRY_DELAY = 5  # Delay in seconds between retries
 
 
@@ -246,6 +246,7 @@ def _run_with_retry(
                 logger.debug(f"429 Too Many Requests. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
                 retries += 1
+                retry_delay += retry_delay
             else:
                 raise  # Re-raise non-429 HTTP errors
 
