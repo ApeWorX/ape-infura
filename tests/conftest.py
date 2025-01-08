@@ -1,4 +1,3 @@
-import ape
 import pytest
 
 from ape_infura import NETWORKS
