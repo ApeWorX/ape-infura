@@ -119,6 +119,13 @@ def test_dynamic_poa_check(mocker):
     infura = Infura(name=real.name, network=real.network)
     patch = mocker.patch("ape_infura.provider._create_web3")
     patch.return_value = mock_web3
+
+    def make_request(rpc, arguments):
+        if rpc == "eth_chainId":
+            return {"result": "0x4268"}
+
+    mock_web3.provider.make_request.side_effect = make_request
+
     infura.connect()
     mock_web3.middleware_onion.inject.assert_called_once_with(ExtraDataToPOAMiddleware, layer=0)
 
