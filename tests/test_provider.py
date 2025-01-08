@@ -119,6 +119,13 @@ def test_dynamic_poa_check(mocker):
     infura = Infura(name=real.name, network=real.network)
     patch = mocker.patch("ape_infura.provider._create_web3")
     patch.return_value = mock_web3
+
+    def make_request(rpc, arguments):
+        if rpc == "eth_chainId":
+            return {"result": "0x4268"}
+
+    mock_web3.provider.make_request.side_effect = make_request
+
     infura.connect()
     mock_web3.middleware_onion.inject.assert_called_once_with(ExtraDataToPOAMiddleware, layer=0)
 
@@ -128,3 +135,43 @@ def test_api_secret():
     session = _get_session()
     assert session.auth == ("", "123")
     del os.environ["WEB3_INFURA_PROJECT_SECRET"]
+
+
+def test_chain_id(networks):
+    with networks.ethereum.sepolia.use_provider("infura") as infura:
+        assert infura.chain_id == 11155111
+
+    with networks.ethereum.holesky.use_provider("infura") as infura:
+        assert infura.chain_id == 17000
+
+
+def test_chain_id_cached(mocker, networks):
+    """
+    A test just showing we utilize a cached chain ID
+    to limit unnecessary requests.
+    """
+
+    infura = networks.ethereum.sepolia.get_provider("infura")
+    infura.connect()
+
+    class ChainIdTracker:
+        call_count = 0
+
+        def make_request(self, rpc, arguments):
+            if rpc == "eth_chainId":
+                self.call_count += 1
+                return {"result": "0x4268"}
+
+    tracker = ChainIdTracker()
+    mock_web3 = mocker.MagicMock()
+    mock_web3.provider.make_request.side_effect = tracker.make_request
+    infura._web3 = mock_web3
+
+    # Start off fresh for the sake of the test.
+    infura.__dict__.pop("chain_id")
+
+    _ = infura.chain_id
+    _ = infura.chain_id  # Call again!
+    _ = infura.chain_id  # Once more!
+
+    assert tracker.call_count == 1

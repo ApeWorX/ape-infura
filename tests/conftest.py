@@ -1,24 +1,8 @@
-import ape
 import pytest
 
 from ape_infura import NETWORKS
 
 NETWORK_SKIPS = ("starknet",)
-
-
-@pytest.fixture
-def accounts():
-    return ape.accounts
-
-
-@pytest.fixture
-def Contract():
-    return ape.Contract
-
-
-@pytest.fixture
-def networks():
-    return ape.networks
 
 
 # NOTE: Using a `str` as param for better pytest test-case name generation.
