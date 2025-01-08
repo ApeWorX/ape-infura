@@ -137,18 +137,12 @@ def test_api_secret():
     del os.environ["WEB3_INFURA_PROJECT_SECRET"]
 
 
-def test_chain_id(provider):
-    actual = provider.chain_id
-    assert actual is not None
-    assert isinstance(actual, int)
+def test_chain_id(networks):
+    with networks.ethereum.sepolia.use_provider("infura") as infura:
+        assert infura.chain_id == 11155111
 
-    # Test a couple of these just to show the cached
-    # chain ID does not fudge up across networks.
-    if provider.network.ecosystem.name == "ethereum":
-        if provider.network.name == "mainnet":
-            assert actual == 1
-        elif provider.network.name == "sepolia":
-            assert actual == 11155111
+    with networks.ethereum.holesky.use_provider("infura") as infura:
+        assert infura.chain_id == 17000
 
 
 def test_chain_id_cached(mocker, networks):
@@ -156,9 +150,22 @@ def test_chain_id_cached(mocker, networks):
     A test just showing we utilize a cached chain ID
     to limit unnecessary requests.
     """
+
     infura = networks.ethereum.sepolia.get_provider("infura")
     infura.connect()
-    spy = mocker.spy(infura.web3.provider, "make_request")
+
+    class ChainIdTracker:
+        call_count = 0
+
+        def make_request(self, rpc, arguments):
+            if rpc == "eth_chainId":
+                self.call_count += 1
+                return {"result": "0x4268"}
+
+    tracker = ChainIdTracker()
+    mock_web3 = mocker.MagicMock()
+    mock_web3.provider.make_request.side_effect = tracker.make_request
+    infura._web3 = mock_web3
 
     # Start off fresh for the sake of the test.
     infura.__dict__.pop("chain_id")
@@ -167,5 +174,4 @@ def test_chain_id_cached(mocker, networks):
     _ = infura.chain_id  # Call again!
     _ = infura.chain_id  # Once more!
 
-    assert len(spy.call_args_list) == 1
-    assert spy.call_args_list[0][0][0] == "eth_chainId"
+    assert tracker.call_count == 1
