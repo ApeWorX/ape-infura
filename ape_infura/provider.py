@@ -1,15 +1,13 @@
 import os
 import random
-import time
-from collections.abc import Callable
 from functools import cached_property
 from typing import Optional
 
 from ape.api import UpstreamProvider
 from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineError
-from ape.logging import logger
+from ape.utils.rpc import request_with_retry
 from ape_ethereum.provider import Web3Provider
-from requests import HTTPError, Session
+from requests import Session
 from web3 import HTTPProvider, Web3
 from web3.exceptions import ContractLogicError as Web3ContractLogicError
 from web3.exceptions import ExtraDataLengthError
@@ -140,9 +138,21 @@ class Infura(Web3Provider, UpstreamProvider):
     def connection_str(self) -> str:
         return self.uri
 
-    @property
+    @cached_property
     def chain_id(self):
-        return _run_with_retry(lambda: self._web3.eth.chain_id)
+        return request_with_retry(
+            lambda: self._get_chain_id(),
+            max_retries=_MAX_REQUEST_RETRIES,
+            min_retry_delay=_REQUEST_RETRY_DELAY * 1_000,
+        )
+
+    def _get_chain_id(self):
+        result = self.make_request("eth_chainId", [])
+        if isinstance(result, int):
+            return result
+
+        # Is a hex.
+        return int(result, 16)
 
     def connect(self):
         session = _get_session()
@@ -232,22 +242,3 @@ class Infura(Web3Provider, UpstreamProvider):
 
 def _create_web3(http_provider: HTTPProvider) -> Web3:
     return Web3(http_provider)
-
-
-def _run_with_retry(
-    func: Callable, max_retries: int = _MAX_REQUEST_RETRIES, retry_delay: int = _REQUEST_RETRY_DELAY
-):
-    retries = 0
-    while retries < max_retries:
-        try:
-            return func()
-        except HTTPError as err:
-            if err.response.status_code == 429:
-                logger.debug(f"429 Too Many Requests. Retrying in {retry_delay} seconds...")
-                time.sleep(retry_delay)
-                retries += 1
-                retry_delay += retry_delay
-            else:
-                raise  # Re-raise non-429 HTTP errors
-
-    raise ProviderError(f"Exceeded maximum retries ({max_retries}).")
