@@ -123,6 +123,7 @@ def test_dynamic_poa_check(mocker):
     def make_request(rpc, arguments):
         if rpc == "eth_chainId":
             return {"result": "0x4268"}
+        return None
 
     mock_web3.provider.make_request.side_effect = make_request
 
@@ -161,6 +162,7 @@ def test_chain_id_cached(mocker, networks):
             if rpc == "eth_chainId":
                 self.call_count += 1
                 return {"result": "0x4268"}
+            return None
 
     tracker = ChainIdTracker()
     mock_web3 = mocker.MagicMock()
