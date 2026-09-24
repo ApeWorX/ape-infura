@@ -8,8 +8,10 @@ from ape.utils.rpc import request_with_retry
 from ape_ethereum.provider import Web3Provider
 from requests import Session
 from web3 import HTTPProvider, Web3
-from web3.exceptions import ContractLogicError as Web3ContractLogicError
-from web3.exceptions import ExtraDataLengthError
+from web3.exceptions import (
+    ContractLogicError as Web3ContractLogicError,
+    ExtraDataLengthError,
+)
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 
 try:
