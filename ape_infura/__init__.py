@@ -17,13 +17,12 @@ def __getattr__(name: str):
 
         return Infura
 
-    elif name == "NETWORKS":
+    if name == "NETWORKS":
         from ape_infura.utils import NETWORKS
 
         return NETWORKS
 
-    else:
-        raise AttributeError(name)
+    raise AttributeError(name)
 
 
 __all__ = [

@@ -1,14 +1,18 @@
 import os
+from typing import TYPE_CHECKING
 
 import pytest
 import websocket  # type: ignore
 from ape import networks
 from web3.exceptions import ExtraDataLengthError
 
-try:
-    from web3.middleware import ExtraDataToPOAMiddleware  # type: ignore
-except ImportError:
-    from web3.middleware import geth_poa_middleware as ExtraDataToPOAMiddleware  # type: ignore
+if TYPE_CHECKING:
+    from web3.middleware import ExtraDataToPOAMiddleware
+else:
+    try:
+        from web3.middleware import ExtraDataToPOAMiddleware
+    except ImportError:  # pragma: no cover
+        from web3.middleware import geth_poa_middleware as ExtraDataToPOAMiddleware  # noqa: N812
 
 from ape_infura.provider import _WEBSOCKET_CAPABLE_NETWORKS, Infura, _get_session
 
@@ -123,6 +127,7 @@ def test_dynamic_poa_check(mocker):
     def make_request(rpc, arguments):
         if rpc == "eth_chainId":
             return {"result": "0x4268"}
+        return None
 
     mock_web3.provider.make_request.side_effect = make_request
 
@@ -161,6 +166,7 @@ def test_chain_id_cached(mocker, networks):
             if rpc == "eth_chainId":
                 self.call_count += 1
                 return {"result": "0x4268"}
+            return None
 
     tracker = ChainIdTracker()
     mock_web3 = mocker.MagicMock()
