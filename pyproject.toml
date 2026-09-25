@@ -44,6 +44,14 @@ test = [
     "pytest-xdist",
     "pytest-cov",
     "hypothesis>=6.2.0,<7",
+    "pytest-mock",
+    "websocket-client",
+    "ape-arbitrum",
+    "ape-avalanche",
+    "ape-blast",
+    "ape-optimism",
+    "ape-polygon",
+
 ]
 lint = [
     "mypy>=1.15.0,<2",

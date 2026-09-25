@@ -8,7 +8,9 @@ from web3.exceptions import ExtraDataLengthError
 try:
     from web3.middleware import ExtraDataToPOAMiddleware  # type: ignore
 except ImportError:
-    from web3.middleware import geth_poa_middleware as ExtraDataToPOAMiddleware  # type: ignore
+    from web3.middleware import (
+        geth_poa_middleware as ExtraDataToPOAMiddleware,  # type: ignore  # noqa: N812
+    )
 
 from ape_infura.provider import _WEBSOCKET_CAPABLE_NETWORKS, Infura, _get_session
 
