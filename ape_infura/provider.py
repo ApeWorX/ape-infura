@@ -1,7 +1,7 @@
 import os
 import random
 from functools import cached_property
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from ape.api import UpstreamProvider
 from ape.exceptions import ContractLogicError, ProviderError, VirtualMachineError
@@ -9,14 +9,19 @@ from ape.utils.rpc import request_with_retry
 from ape_ethereum.provider import Web3Provider
 from requests import Session
 from web3 import HTTPProvider, Web3
-from web3.exceptions import ContractLogicError as Web3ContractLogicError
-from web3.exceptions import ExtraDataLengthError
+from web3.exceptions import (
+    ContractLogicError as Web3ContractLogicError,
+    ExtraDataLengthError,
+)
 from web3.gas_strategies.rpc import rpc_gas_price_strategy
 
-try:
-    from web3.middleware import ExtraDataToPOAMiddleware  # type: ignore
-except ImportError:
-    from web3.middleware import geth_poa_middleware as ExtraDataToPOAMiddleware  # type: ignore
+if TYPE_CHECKING:
+    from web3.middleware import ExtraDataToPOAMiddleware
+else:
+    try:
+        from web3.middleware import ExtraDataToPOAMiddleware
+    except ImportError:  # pragma: no cover
+        from web3.middleware import geth_poa_middleware as ExtraDataToPOAMiddleware  # noqa: N812
 
 from web3.middleware.validation import MAX_EXTRADATA_LENGTH
 
@@ -54,7 +59,7 @@ class MissingProjectKeyError(InfuraProviderError):
         super().__init__(f"Must set one of {env_var_str}")
 
 
-def _get_api_key_secret() -> Optional[str]:
+def _get_api_key_secret() -> str | None:
     for name in _API_SECRET_ENVIRONMENT_VARIABLE_NAMES:
         if secret := os.environ.get(name):
             return secret
@@ -90,7 +95,7 @@ class Infura(Web3Provider, UpstreamProvider):
         api_keys = set()
         for env_var_name in _API_KEY_ENVIRONMENT_VARIABLE_NAMES:
             if env_var := os.environ.get(env_var_name):
-                api_keys.update(set(key.strip() for key in env_var.split(",")))
+                api_keys.update({key.strip() for key in env_var.split(",")})
 
         if not api_keys:
             raise MissingProjectKeyError()
@@ -124,7 +129,7 @@ class Infura(Web3Provider, UpstreamProvider):
         return self.uri
 
     @property
-    def ws_uri(self) -> Optional[str]:
+    def ws_uri(self) -> str | None:
         # NOTE: Overriding `Web3Provider.ws_uri` implementation
         ecosystem_name = self.network.ecosystem.name
         network_name = self.network.name
@@ -221,7 +226,7 @@ class Infura(Web3Provider, UpstreamProvider):
             # Is some other VM error, like gas related
             return VirtualMachineError(message["message"], txn=txn)
 
-        elif not isinstance(message, str):
+        if not isinstance(message, str):
             return VirtualMachineError(base_err=exception, txn=txn)
 
         # If get here, we have detected a contract logic related revert.
@@ -233,9 +238,8 @@ class Infura(Web3Provider, UpstreamProvider):
                 # Was given a revert message
                 message = message.split(":")[-1].strip()
                 return ContractLogicError(revert_message=message, txn=txn)
-            else:
-                # No revert message
-                return ContractLogicError(txn=txn)
+            # No revert message
+            return ContractLogicError(txn=txn)
 
         return VirtualMachineError(message, txn=txn)
 
