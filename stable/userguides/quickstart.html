@@ -6,8 +6,8 @@
       <link rel="canonical" href="ape-infura/userguides/quickstart.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
-  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=10d1008b" />
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,10 +18,11 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/>
-<meta property="og:url" content="ape-infura/userguides/quickstart.html"/>
-<meta property="og:title" content="Quick Start"/>
-<meta name="twitter:card" content="summary"/>
+    
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="ape-infura/userguides/quickstart.html"/>
+  <meta property="og:title" content="Quick Start"/>
+    <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
   <div class="sy-head-blur"></div>
@@ -31,7 +32,7 @@
       <img class="dark-logo" src="../_static/logo_green.svg" alt="ape-infura" height="28" loading="lazy" />
       <strong>ape-infura</strong>
     </a>
-    <div class="sy-head-nav" id="HeadNav">
+    <div class="sy-head-nav" id="head-nav">
       <nav class="sy-head-links"></nav>
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
@@ -43,11 +44,11 @@ data-aria-auto="Switch to light color mode"
 data-aria-light="Switch to dark color mode"
 data-aria-dark="Switch to auto color mode">
 <i class="i-lucide theme-icon"></i>
-</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="HeadNav" aria-expanded="false">
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
         <div class="hamburger">
           <span class="hamburger_1"></span>
-          <span class="hamburger_2 -translate-x-2"></span>
-          <span class="hamburger_3 -translate-x-1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
         </div>
       </button>
     </div>
@@ -75,7 +76,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#via-pip">via <code class="docutils literal notranslate"><span class="pre">pip</span></code></a></li>
-<li><a class="reference internal" href="#via-setuptools">via <code class="docutils literal notranslate"><span class="pre">setuptools</span></code></a></li>
+<li><a class="reference internal" href="#via-source">via source</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#quick-usage">Quick Usage</a></li>
@@ -83,7 +84,8 @@ data-aria-dark="Switch to auto color mode">
 </div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
-  <main class="sy-main w-full max-sm:max-w-full print:pt-6"><div class="sy-breadcrumbs" role="navigation">
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
   <div class="sy-breadcrumbs-inner flex items-center">
     <div class="md:hidden mr-3">
       <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
@@ -106,10 +108,45 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><div class="flex flex-col break-words justify-between">
-      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
-        <article class="yue" role="main">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <div class="copy-page-wrapper relative pb-4 lg:absolute lg:top-8 lg:right-6 xl:right-12">
+  <div id="copy-page-trigger">
+    <button
+      type="button"
+      class="js-copy px-3 py-1 inline-flex items-center gap-1"
+      data-url="ape-infura/_sources/userguides/quickstart.md.txt"
+    >
+      <i class="i-lucide" data-icon="copy"></i>
+      <span>Copy page</span>
+    </button>
+    <button class="js-menu px-2 py-1" type="button" aria-label="More actions"
+      aria-haspopup="menu" aria-expanded="false" aria-controls="copy-page-content">
+      <i class="i-lucide chevron-down"></i>
+    </button>
+  </div>
+  <div id="copy-page-content" role="menu" aria-orientation="vertical" aria-hidden="true">
+    <div role="presentation">
+      <div class="flex flex-col" role="group">
+        <button class="js-copy" type="button" role="menuitem"
+          data-url="ape-infura/_sources/userguides/quickstart.md.txt">
+          <span class="iconify-icon">
+            <i class="i-lucide" data-icon="copy"></i>
+          </span>
+          <span>Copy page</span>
+        </button>
+        <a role="menuitem" href="ape-infura/_sources/userguides/quickstart.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20ape-infura/_sources/userguides/quickstart.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:openai"></iconify-icon>
+          <span>Open in ChatGPT</span>
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20ape-infura/_sources/userguides/quickstart.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:claude"></iconify-icon>
+          <span>Open in Claude</span>
+        </a></div>
+    </div>
+  </div>
+</div><article class="yue" role="main">
           <section id="quick-start">
-<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h1>
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h1>
 <p>Use the <a class="reference external" href="https://developer.metamask.io/">Metamask Developer</a> (F.K.A. Infura) provider plugin to interact with blockchains via APIs.
 This plugin supports the following ecosystems:</p>
 <ul class="simple">
@@ -131,32 +168,33 @@ This plugin supports the following ecosystems:</p>
 <li><p>zkSync</p></li>
 </ul>
 <section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h2>
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://www.python.org/downloads">python3</a> version 3.9 up to 3.12.</p></li>
+<li><p><a class="reference external" href="https://www.python.org/downloads">Python 3</a> version 3.10 or greater.</p></li>
 </ul>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
 <section id="via-pip">
-<h3>via <code class="docutils literal notranslate"><span class="pre">pip</span></code><a class="headerlink" href="#via-pip" title="Link to this heading"></a></h3>
+<h3>via <code class="docutils literal notranslate"><span class="pre">pip</span></code><a class="headerlink" href="#via-pip" title="Link to this heading">#</a></h3>
 <p>You can install the latest release via <a class="reference external" href="https://pypi.org/project/pip/"><code class="docutils literal notranslate"><span class="pre">pip</span></code></a>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">pip<span class="w"> </span>install<span class="w"> </span>ape-infura
 </span></pre></div>
 </div>
 </section>
-<section id="via-setuptools">
-<h3>via <code class="docutils literal notranslate"><span class="pre">setuptools</span></code><a class="headerlink" href="#via-setuptools" title="Link to this heading"></a></h3>
-<p>You can clone the repository and use <a class="reference external" href="https://github.com/pypa/setuptools"><code class="docutils literal notranslate"><span class="pre">setuptools</span></code></a> for the most up-to-date version:</p>
+<section id="via-source">
+<h3>via source<a class="headerlink" href="#via-source" title="Link to this heading">#</a></h3>
+<p>You can clone the repository and install for development:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ApeWorX/ape-infura.git
 </span><span data-line="2"><span class="nb">cd</span><span class="w"> </span>ape-infura
-</span><span data-line="3">python3<span class="w"> </span>setup.py<span class="w"> </span>install
+</span><span data-line="3">uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev
+</span><span data-line="4">uv<span class="w"> </span>run<span class="w"> </span>prek<span class="w"> </span>install
 </span></pre></div>
 </div>
 </section>
 </section>
 <section id="quick-usage">
-<h2>Quick Usage<a class="headerlink" href="#quick-usage" title="Link to this heading"></a></h2>
+<h2>Quick Usage<a class="headerlink" href="#quick-usage" title="Link to this heading">#</a></h2>
 <p>First, make sure you have one of the following environment variables set (it doesn’t matter which one):</p>
 <ul class="simple">
 <li><p>WEB3_INFURA_PROJECT_ID</p></li>
@@ -182,7 +220,7 @@ This plugin supports the following ecosystems:</p>
 <p>To connect to Infura from a Python script, use the <code class="docutils literal notranslate"><span class="pre">networks</span></code> top-level manager:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">ape</span><span class="w"> </span><span class="kn">import</span> <span class="n">networks</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="k">with</span> <span class="n">networks</span><span class="o">.</span><span class="n">parse_network_choice</span><span class="p">(</span><span class="s2">&quot;ethereum:mainnet:infura&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">provider</span><span class="p">:</span>
+</span><span data-line="3"><span class="k">with</span> <span class="n">networks</span><span class="o">.</span><span class="n">parse_network_choice</span><span class="p">(</span><span class="s2">"ethereum:mainnet:infura"</span><span class="p">)</span> <span class="k">as</span> <span class="n">provider</span><span class="p">:</span>
 </span><span data-line="4">    <span class="c1"># Also, access the websocket URI:</span>
 </span><span data-line="5">    <span class="nb">print</span><span class="p">(</span><span class="n">provider</span><span class="o">.</span><span class="n">ws_uri</span><span class="p">)</span>
 </span></pre></div>
@@ -208,7 +246,7 @@ This plugin supports the following ecosystems:</p>
 <footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>2024, ApeWorX LTD</p>
+      <div class="sy-foot-copyright"><p>2026, ApeWorX LTD</p>
   
   <p>
     Made with
@@ -225,8 +263,8 @@ This plugin supports the following ecosystems:</p>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script data-domain="docs.apeworx.io" defer="defer" src="https://plausible.io/js/script.js"></script>
-      <script src="../_static/shibuya.js?v=55e26b35"></script></body>
+      <script src="../_static/shibuya.js?v=50760d75"></script></body>
 </html>
